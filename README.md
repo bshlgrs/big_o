@@ -30,12 +30,16 @@ problems:
 - server for 40th largest item
 
 General ideas:
+
 - useful to discover that things are monoids or groups, or natural transformations
 - Give it all the theorems about reduction operations over monoids
   - monoids:
     sum xs + sum ys = sum (xs ++ ys) = sum (ys ++ xs)
   - groups:
     sum (xs ++ ys) - sum xs = sum ys
+- Use transducers for map and filter
+
+
 
 Different stages:
 

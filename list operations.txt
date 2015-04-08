@@ -1,0 +1,10 @@
+List[A] operations:
+
+- get(index: Int): A
+- set(index: Int, value: A)
+- map, filter, reduce
+- getMin(): A
+- getMax(): A
+- insert(index: Int, value: A)
+- delete(index: Int)
+- contains?(value: A)
