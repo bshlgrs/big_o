@@ -38,6 +38,7 @@ General ideas:
   - groups:
     sum (xs ++ ys) - sum xs = sum ys
 - Use transducers for map and filter
+- Think about whether it's worth sorting all your collections
 
 
 

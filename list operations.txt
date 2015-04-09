@@ -8,3 +8,21 @@ List[A] operations:
 - insert(index: Int, value: A)
 - delete(index: Int)
 - contains?(value: A)
+- selectKthSmallest(k: Int) -- this one is interesting because it might inspire you to make a sorted tree.
+
+What's the relationship between lists and maps?
+
+Hierarchies:
+
+- Collection
+  - Map
+  - OrderedCollection
+    - List
+    - Queue
+    - Stack
+  - Set
+
+Map[A, B] operations:
+
+- get(thing: A): B
+- set(thing: A, value: B): Unit
