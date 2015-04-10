@@ -1,0 +1,16 @@
+Things about sorted lists:
+
+- Sorting is O(n log n)
+- Getting the kth smallest element is O(n)
+- Getting the m elements from k onwards:
+  - Make a heap, takes O(n log k) + O(k log m)
+  - Select a bunch of times, takes O(n * m)
+
+- If you map over it and sort it again, you didn't need to sort it originally.
+
+
+
+List:
+insertItem: n
+insertNode: 1
+

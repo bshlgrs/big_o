@@ -1,0 +1,36 @@
+
+# priority queue
+
+class PriorityQueue[Item](table: {item: Item, time: Int}) {
+  add(item: Item, time: Int): Unit = table.add(item, time)
+  getTime(item: Item): Option[Int] = table.get(item).time
+  getMin(): Option[Item] = table.getMin[time].item -- should this explicitly disambiguate multiple minimums?
+  popMin(): Option[Item] = {
+    val minNode = table.getMin[time]
+    table.remove(minNode)
+    minNode.item
+  }
+}
+
+Suppose we have a priority queue with fast lookup of times. This has a hash map and a min heap. The hash map is from items to (item, pointer to heap) pairs. The min heap is a heap of (time, pointer to hash map) pairs. We could duplicate that data, at the cost of increased memory usage but with the gain of increased memory locality. (Maybe we could have lazily caching duplication?)
+
+# hash map
+
+class HashMap[Key, Value](table: {key: unique Key, value: Value}) {
+  get(key: Key): Option[Value] = table.get(key) -- infers the non-listyness of this from the uniqueness of key
+  set(key: Key, value: Value): Unit = table.set(key, value) -- infers order of arguments from types
+}
+
+class OrderedHashMap[Key, Value](table: {key: ordered unique Key, value: Value}) {
+  get(key: Key): Option[Value] = table.get(key).map(_.value)
+  set(key: Key, value: Value) = {
+    val optionNode = table.get(key)
+    if (node <- optionNode) {
+      table.remove(node)
+      node.value = value
+      table.append(node)
+    } else {
+      table.append(key, value)
+    }
+  }
+}
