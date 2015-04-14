@@ -69,4 +69,10 @@ This one: hmm. I think that you can do it with a min heap and an array.
       ask items for get, set, append # it's a different story if there's append but not set
       getMedian = items.select(items.length / 2)
 
-I think that the best solution for this is to have a sorted version of the array.
+I think that the best solution for this is to have a BST.
+
+## Thing to find close values
+
+    CloseValueThing(val items: Seq[Int])
+      ask items for add
+      getMinimumExceedingValue(cutoff: Int) = items.sort.filter(_ > cutoff).head

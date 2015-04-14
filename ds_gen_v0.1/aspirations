@@ -1,0 +1,29 @@
+Every substructure should specify which particular columns it's implementing.
+
+Eg:
+
+class Stack[A](table: {Index: ordered Index, Item: A}) {
+  push(item: A) = table.push[Index](item)
+  pop() : A = table.pop[Index](item)
+}
+
+turns into
+
+Stack[A]:
+  table:
+    LinkedList on index, item provides push, pop
+
+
+PriorityQueue[A]{item: A, priority: Float} {
+  set(item: A, priority: Float) = set[Item](item, priority)
+  get(item: A): Float = get[Item](item).priority
+  popMin(): Item = pop(getMin[Priority]()).item
+}
+
+turns into:
+
+PriorityQueue[A]:
+  MinHeap on priority provides getMin[Priority]
+  HashMap on item, priority provides get, set
+
+  
