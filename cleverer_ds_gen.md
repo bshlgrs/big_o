@@ -20,8 +20,10 @@ With everything, you can store a tree which remembers intermediate results. This
 
 Operations: C+I, I, C, neither (e.g. +, SLn_r *, min, GLn_r *)
 Stack: easy, easy, easy, easy
-Queue: easy, easy, tree?, tree
-List: easy, tree?, tree?, tree
+Queue: easy, easy, [amortized easy](http://www.keithschwarz.com/interesting/code/?dir=min-queue), tree
+List: easy, tree? [1], tree?, tree
+
+(Failed idea 1: store the product, e.g. ABCDE, as well as all sub products. Now, divide by ABC, you get DE. Get AB * new C * DE. This gets you the answer, but now all your sub products are fucked. So this doesn't work.)
 
 ### Quickly responding to queries about reductions over array slices, in the presence and absence of mutation
 
