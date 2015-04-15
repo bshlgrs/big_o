@@ -12,18 +12,51 @@ I suspect that certain algebraic structures of reduction operations are what det
 
 With an invertible, commutative operation, you want to just store the reduction in one place and update it as necessary.
 
+Operations which are invertible except for a finite number of annihilators basically count as invertible. Eg, suppose you want to have quick access to the product of a list. You can just store the product of the non-zero elements and the number of 0s, and update them in the relevant manner when you change elements. This gives you constant time everything.
+
 With stacks, an asymptotically optimal strategy to store the result of a non-invertible reduction is just to store it every time you push something. That's O(1) for each operation. If it's invertible, you can save some space by using the inverse operation.
 
 With invertible (non-commutative) operations on a queue, you can still do this: you just left-multiply by the inverse if it's an enqueue operation, and right-multiply if it's a dequeue. Or whatever.
 
 With everything, you can store a tree which remembers intermediate results. This has log(n) time for changing operations. (As a bonus, it gets you results for subarrays in log(n) time too.)
 
-Operations: C+I, I, C, neither (e.g. +, SLn_r *, min, GLn_r *)
-Stack: easy, easy, easy, easy
-Queue: easy, easy, [amortized easy](http://www.keithschwarz.com/interesting/code/?dir=min-queue), tree
-List: easy, tree?, tree?, tree
 
-*Operations which are invertible except for a finite number of annihilators basically count as invertible.* Eg, suppose you want to have quick access to the product of a list. You can just store the product of the non-zero elements and the number of 0s, and update them in the relevant manner when you change elements. This gives you constant time everything.
+
+|                    | +    | *        | SLn_R * | min                | GLn_R * |
+|--------------------|------|----------|---------|--------------------|---------|
+| Stack              | easy | easy     | easy    | easy               | easy    |
+| Queue              | easy | easy [1] | easy    | amortized easy [2] | tree    |
+| Random access list | easy | tree     | tree?   | tree?              | tree    |
+
+[1]: Here's the algorithm:
+
+		class ProductQueue:
+		  def __init__(self):
+		    self.queue = Queue()
+		    self.zero_counter = Queue()
+		    self.product = 0
+
+		  def enqueue(self, item):
+		    self.queue.enqueue(item)
+		    if item == 0:
+		      self.zero_counter += 1
+		      self.product = 1
+		    else:
+		      self.product *= item
+
+		  def get_product(self):
+		    if len(zeroes) == 0:
+		      return self.product
+		    else:
+		      return 0
+
+		  def dequeue(self):
+		    item = self.dequeue()
+		    if item == 0:
+		      self.zero_counter -= 1
+		    return item
+    
+[2]: [amortized easy](http://www.keithschwarz.com/interesting/code/?dir=min-queue)
 
 ### Quickly responding to queries about reductions over array slices, in the presence and absence of mutation
 
@@ -35,6 +68,7 @@ In the absence of mutation, with SLn_R *, you can store the same array of partia
 
 In the absence of mutation, with min, I again think that you can't do better than a tree, because your annihilator could be anywhere in a subarray that you make.
 
-In presence of mutation, with GLn_R *, I don't think you can do any better than a tree, for the same reason as above.
+What about *, which is invertible except a finite number of annihilators? In the absence of mutation, just let every node in the array know about the index of the 0 closest to it on the left. This gives us O(1) lookups. In the presence of mutation, I think you can't do better than a tree?
 
-What about *, which is invertible except a finite number of annihilators? In the absence of mutation, just let every node in the array know about the index of the 0 closest to it on the left. This gives us O(1) lookups.
+### Queries about one-sided array slices
+
