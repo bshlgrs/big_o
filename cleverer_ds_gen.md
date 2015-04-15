@@ -21,9 +21,9 @@ With everything, you can store a tree which remembers intermediate results. This
 Operations: C+I, I, C, neither (e.g. +, SLn_r *, min, GLn_r *)
 Stack: easy, easy, easy, easy
 Queue: easy, easy, [amortized easy](http://www.keithschwarz.com/interesting/code/?dir=min-queue), tree
-List: easy, tree? [1], tree?, tree
+List: easy, tree?, tree?, tree
 
-(Failed idea 1: store the product, e.g. ABCDE, as well as all sub products. Now, divide by ABC, you get DE. Get AB * new C * DE. This gets you the answer, but now all your sub products are fucked. So this doesn't work.)
+*Operations which are invertible except for a finite number of annihilators basically count as invertible.* Eg, suppose you want to have quick access to the product of a list. You can just store the product of the non-zero elements and the number of 0s, and update them in the relevant manner when you change elements. This gives you constant time everything.
 
 ### Quickly responding to queries about reductions over array slices, in the presence and absence of mutation
 
@@ -36,3 +36,5 @@ In the absence of mutation, with SLn_R *, you can store the same array of partia
 In the absence of mutation, with min, I again think that you can't do better than a tree, because your annihilator could be anywhere in a subarray that you make.
 
 In presence of mutation, with GLn_R *, I don't think you can do any better than a tree, for the same reason as above.
+
+What about *, which is invertible except a finite number of annihilators? In the absence of mutation, just let every node in the array know about the index of the 0 closest to it on the left. This gives us O(1) lookups.
