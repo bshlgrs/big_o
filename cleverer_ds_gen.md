@@ -30,32 +30,34 @@ With everything, you can store a tree which remembers intermediate results. This
 
 [1]: Here's the algorithm:
 
-		class ProductQueue:
-		  def __init__(self):
-		    self.queue = Queue()
-		    self.zero_counter = Queue()
-		    self.product = 0
+```python
+class ProductQueue:
+  def __init__(self):
+    self.queue = Queue()
+    self.zero_counter = Queue()
+    self.product = 0
 
-		  def enqueue(self, item):
-		    self.queue.enqueue(item)
-		    if item == 0:
-		      self.zero_counter += 1
-		      self.product = 1
-		    else:
-		      self.product *= item
+  def enqueue(self, item):
+    self.queue.enqueue(item)
+    if item == 0:
+      self.zero_counter += 1
+      self.product = 1
+    else:
+      self.product *= item
 
-		  def get_product(self):
-		    if len(zeroes) == 0:
-		      return self.product
-		    else:
-		      return 0
+  def get_product(self):
+    if len(zeroes) == 0:
+      return self.product
+    else:
+      return 0
 
-		  def dequeue(self):
-		    item = self.dequeue()
-		    if item == 0:
-		      self.zero_counter -= 1
-		    return item
-    
+  def dequeue(self):
+    item = self.dequeue()
+    if item == 0:
+      self.zero_counter -= 1
+    return item
+```
+
 [2]: [amortized easy](http://www.keithschwarz.com/interesting/code/?dir=min-queue)
 
 [3]: inspired by [2]:
