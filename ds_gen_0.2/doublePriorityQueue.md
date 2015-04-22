@@ -23,10 +23,10 @@ Option: Map
 
 decompose into map methods to get costs:
 
-getPriorities => [get]
-add => [add]
-adjustP1 => [get, update(p1)]
-popMinP1 => [getMin(p1), detach]
+    getPriorities => [get]
+    add => [add]
+    adjustP1 => [get, update(p1)]
+    popMinP1 => [getMin(p1), detach]
 
 Now, the hard part is finding the correct data structures given that list of methods. For the moment, let's treat all data structures as having a privileged "key" field. For example, in this case, the correct answer is a hashmap and two heaps. Let's write that as:
 
