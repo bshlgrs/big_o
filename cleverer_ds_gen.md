@@ -141,3 +141,5 @@ What about *, which is invertible except a finite number of annihilators? In the
 
 ### Queries about one-sided array slices
 
+If it's immutable, this problem is easy, you just precompute it.
+

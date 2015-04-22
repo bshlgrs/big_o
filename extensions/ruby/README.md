@@ -1,0 +1,1 @@
+relevant: http://java.ociweb.com/mark/NFJS/RubyCExtensions.pdf

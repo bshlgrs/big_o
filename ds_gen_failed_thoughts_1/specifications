@@ -1,0 +1,15 @@
+
+ordered data structure LinkedList[A]:
+  hooks:
+    set
+  implements:
+    get(n):
+      implementation: get(n)
+      speed: O(n)
+    size:
+      implementation: size
+      speed: O(n)
+
+algorithm SelectionAlgorithm[A]:
+  implements:
+    sorted[A].get(n)

@@ -1,0 +1,7 @@
+# class PriorityQueue(queue: Map[item: String, priority: Int]) {
+# 	def getPriority(item: String): Int = queue.get(item).priority
+# 	def addItem(item: String, priority: Int) = queue.set(item, priority)
+# 	def popMin(): String = queue.minimumBy(priority).pop()
+# }
+
+
