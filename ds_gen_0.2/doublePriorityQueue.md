@@ -1,18 +1,18 @@
-## stages
+# stages
 
-### desiderata
+## desiderata
 
-#### methods:
+### methods:
 
 global: get, add
 table: getMin
 node: [getter and setter for each field]
 Option: Map
 
-#### example:
+### example:
 
 
-    DoublePriorityQueue < Map(item: Int, [p1: Float, p2: Float]) {
+    DoublePriorityQueue <: Map(item: Int, [p1: Float, p2: Float]) {
       getPriorities(i: Int): Option[(Float, Float)] = get(i).map((x) => (x.p1, x.p2))
       add(i: Int, p1: Float, p2: Float) = add(i, p1, p2)
       adjustP1(i: Int, p1: Float) = get(i).p1.setP1(p1)
@@ -45,3 +45,4 @@ I guess this is kind of a breadth first search. If we have the following data st
 
 and all those need to choose their keys out of any of the fields. If you have three fields, then there's 12 different structures you could choose. 2**12 isn't *that* big, but it would be nice to not just exhaustively search that.
 
+The only ways of altering nodes are: creating them, updating them, deleting them. Updating has different costs depending on whether you're updating a field which the table uses as a key.
