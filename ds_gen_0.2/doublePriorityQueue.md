@@ -46,3 +46,4 @@ I guess this is kind of a breadth first search. If we have the following data st
 and all those need to choose their keys out of any of the fields. If you have three fields, then there's 12 different structures you could choose. 2**12 isn't *that* big, but it would be nice to not just exhaustively search that.
 
 The only ways of altering nodes are: creating them, updating them, deleting them. Updating has different costs depending on whether you're updating a field which the table uses as a key.
+
