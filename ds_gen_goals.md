@@ -29,3 +29,8 @@ A few things about this:
 
 - you can usually start out with a hash map if it's a map
 - sometimes you don't actually need to store the data, e.g. if get is never called
+
+A list of facts which I need for all the above:
+
+- stacks can be implemented as arrays
+
