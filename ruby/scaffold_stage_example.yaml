@@ -1,0 +1,22 @@
+structure:
+  name: PriorityQueue
+  type: MagicalMap
+  key-field: 
+    name: item
+    type: int
+  fields: 
+    - name: priority
+      type: float
+  internal-storage:
+    - name: hashMap1
+      type: hash_map
+      key:  item
+    - name: minHeap1
+      type: min_heap
+      key:  priority
+  methods:
+    - name: getPriority
+      args:
+        - item
+      body: hashMap1.get(item).priority
+      

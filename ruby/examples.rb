@@ -89,11 +89,11 @@ end
 
 class PriorityQueue < MagicMapDataStructure 
   def key_name
-    :item
+    :item # this also needs a type
   end
 
   def value_columns
-    [:priority]
+    [:priority] # this also needs a type
   end
 
   def getPriority(item)
