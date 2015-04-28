@@ -9,7 +9,7 @@ VALUE getPriority(VALUE self, VALUE item) {
 
   hashMap1Node *node1 = hashMap__get(ms.hashMap1, item_int);
 
-  return DBL2NUM(hashMapNode__getPriority(ms.)) ???
+  return DBL2NUM(hashMapNode__getPriority(ms.)) ??? 
   // do this in `get`
   // if (hashMap1Node == NULL) {
   //   rb_raise_exception("index not found")
