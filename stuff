@@ -1,0 +1,50 @@
+// all of the above ignores generics
+
+interface Stack[A] {
+  defines {
+    getTop(): Node[A]
+    push(node: Node[A])
+  }
+  
+  convenience {
+    pop(): Node[A] = getTop().detatch
+  }
+}
+
+interface Queue[A] {
+  defines {
+    getFront(): Node[A]
+    enqueue(node: Node[A])
+  }
+
+  convenience {
+    dequeue(): Node[A] = getFront().detach
+  }
+}
+
+interface List[A] {
+  implements Stack[A] {
+    getTop(): Node[A] = self.get(0)
+    push(node: Node[A]) = self.insert(0)
+  }
+
+  implements Queue[A] {
+    getFront(): Node[A] = self.get(0)
+    enqueue(node: Node[A]): Unit = self.insert(self.size)
+  }
+
+  defines {
+    // each(block: Block[A]): A
+    get(index: Int): Option[Node[A]]
+    set(index: Int, item: Node[A])
+    insert(index: Int, item: Node[A])
+    delete(index: Int)
+  }
+}
+
+concrete LinkedList[A] implements List[A] {
+  get | O(n)
+  set | O(n)
+  insert | O(n)
+  delete | O(n)
+}

@@ -1,0 +1,12 @@
+You want to build a really big sign which says "HELLO". You have a catalogue of letters which you can buy. Sometimes you can buy two or more letters stuck together. For example, maybe your catalogue has the following prices:
+
+H: $4
+E: $3
+L: $4
+O: $2
+EL: $5
+
+The optimal way to make the sign is to piece it together with the pieces H, EL, L, O.
+
+Write an algorithm which takes a string and the prices of a catalogue and returns the best way to build the string.
+
