@@ -1,0 +1,44 @@
+- name: Buck's Crazy Double Queue
+  extends:
+    name: Map
+    args:
+      - Item
+      - Node
+  columns:
+    - name: Item
+      type: Int
+    - name: P1
+      type: Float
+    - name: P2
+      type: Float
+  methods:
+    - name: addItem
+      return-type: Unit
+      args:
+        - type: node-struct-lit:
+          - name: item
+            type: Int
+          - name: p1
+            type: Float
+          - name: p2
+            type: Float
+      body:
+        - method: add
+          target: self
+          args:
+            - item
+            - p1
+            - p2
+    - name: popItemP1
+      return-type: Node
+      body:
+        - method: getMin
+          target: self
+          args:
+            - P1
+        - method: detach
+          target: res0
+        - method: getField
+          target: res1
+          args:
+            - item

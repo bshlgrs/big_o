@@ -1,0 +1,42 @@
+- name: DoublyLinkedListMap
+  implements: Map
+  speeds:
+    Node:
+      detach: 1
+    self:
+      get: n
+      getMin: n
+      add: 1 # this is unsafe.
+      update: 1
+      detach: 1
+- name: MinHeap
+  implements: Map
+  speeds:
+    Node:
+      detach: 1
+    self:
+      get: n
+      getMin:
+        ifColEq:
+          arg: 0
+          then: 1
+          else: n
+      add: 1
+      update: log(n)
+      updateKey:
+        ifColEq:
+          arg: key
+          then: log(n)
+          else: 1
+      detach: log(n)
+- name: HashMap
+  implements: Map
+  speeds:
+    Node:
+      detach: 1
+    self:
+      get: 1
+      getMin: n
+      add: 1
+      update: 1
+      detach: 1

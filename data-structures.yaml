@@ -1,0 +1,17 @@
+- name: Map
+  methods:
+  - name: add
+    thing-type: setter
+    args:
+    - NodeStruct
+    return-type: Unit
+  - name: getMin
+    thing-type: getter
+    args:
+    - Column
+    return-type: Node
+- name: Node
+  methods:
+  - name: detach
+    thing-type: update
+    return-type: Node
