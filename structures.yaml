@@ -7,10 +7,10 @@
       get: n
       getMin: n
       add: 1 # this is unsafe.
-      update: 1
+      updateKey: 1 # this can probably be done just by detaching and reattaching. I wonder if this is ever more efficient.
       detach: 1
 - name: MinHeap
-  implements: Map
+  implements: MultiMap
   speeds:
     Node:
       detach: 1
@@ -22,12 +22,7 @@
           then: 1
           else: n
       add: 1
-      update: log(n)
-      updateKey:
-        ifColEq:
-          arg: key
-          then: log(n)
-          else: 1
+      updateKey: log(n) # How come decreaseKey is fast in fibonacci trees?
       detach: log(n)
 - name: HashMap
   implements: Map
@@ -38,5 +33,15 @@
       get: 1
       getMin: n
       add: 1
-      update: 1
+      updateKey: 1 # probably pointless
       detach: 1
+- name: RedBlackTree
+  implements: Map
+  speeds:
+    Node:
+      detach: log(n) # citation needed
+    self:
+      get: log(n)
+      getMin: 1 # might as well memoize on insert. Benchmark this?
+      add: log(n)
+      updateKey: log(n) # probably pointless
