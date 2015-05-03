@@ -6,5 +6,4 @@ for x in mylist:
   if newthing > 12:
     total += newthing
 
-
 For bonus points, we can go over whatever different data structures we want.
