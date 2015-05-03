@@ -1,0 +1,60 @@
+priorityQueue = Map[item: Int, priority: Float]:
+  get(item: Int): Float = get[item](item).priority // maybe the column should be inferred?
+  popMin(): Int = getMin[priority]().pop().item
+  add(item: Int, priority: Float) = addOrUpdate(item, priority) // I don't want to allow add natively on maps
+
+-----------------
+
+priorityQueue:
+  type:
+    Map:
+      - Int
+      - Float
+  methods:
+    get:
+      getField:
+        field: priority
+        arg:
+          method:
+            name: get
+            types:
+              - item
+            args:
+              - item
+
+---------------
+
+
+priorityQueue:
+  structures:
+    - name: minHeap
+      type: MinHeap
+      column: priority
+    - name: hashMap
+      type: HashMap
+      column: item
+  methods:
+    get = hashMap.get(item).priority
+    popMin = minHeap.getMin[priority]().pop().item
+    add = hashMap.addOrUpdate(item, priority)
+
+priorityQueue:
+  structures:
+    - name: minHeap
+      type: MinHeap
+      column: priority
+    - name: hashMap
+      type: HashMap
+      column: item
+  methods:
+    get:
+      getField:
+        field: priority
+        arg:
+          method:
+            name: get
+            provider: hashMap
+            types:
+              - item
+            args:
+              - item

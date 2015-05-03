@@ -1,0 +1,4 @@
+When we have a dictionary or list, we're often tempted to make an auxillary data structure which is a multiset with some particular privileged colum with faster indexing.
+
+In most cases, we need to preserve that ordering or uniqueness property.
+

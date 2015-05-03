@@ -45,3 +45,21 @@
       getMin: 1 # might as well memoize on insert. Benchmark this?
       add: log(n)
       updateKey: log(n) # probably pointless
+- name: DoublyLinkedList
+  implements: List
+  speeds:
+    Node:
+      detach: 1
+    self:
+      get: n
+      update: 1 # this is trivially obvious for all lists
+      prepend: 1
+      append: 1
+      popFront: 1
+      popBack: 1
+      contains: n
+      insertAfter: 1 # insert = get; insertAfter
+      insertBefore: 1
+- name: IndexTree
+  implements: List
+  speeds: 
