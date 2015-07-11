@@ -1,0 +1,20 @@
+{
+  "type": "InvertibleReductionOperationMemoizer",
+  "for": "Stack",
+  "fields": {"stored_<%= target %>": "int"},
+  "properties": ["function", "inverse_function", "identity", "target"],
+  "methods": {
+    "initialize": {
+      "code": "@stored_<%= target %> = $identity"
+    },
+    "push": {
+      "after": "@stored_<%= target %> = @stored_<%= target %> <%= function %> x"
+    },
+    "pop": {
+      "before": "@stored_<%= target %> = @stored_<%= target %> <%= inverse_function %> @stack.last"
+    },
+    "<%= target %>": {
+      "code": "return @stored_<%= target %>"
+    }
+  }
+}

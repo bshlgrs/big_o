@@ -1,0 +1,5 @@
+package queries
+
+class Reduction {
+
+}

@@ -1,0 +1,15 @@
+PriorityQueue:
+  fields: unique key, priority
+  insert = (k, p) => insertNode(key = k, priority = p)
+  pop = () => {
+    val smallest = orderedBy(p).last
+    last.removeNode()
+    last.priority
+  }
+  getPriority(k) = {
+    find(key = k).map(_.priority)
+  }
+
+turns to
+
+class PriorityQueue

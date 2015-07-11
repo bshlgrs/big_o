@@ -1,0 +1,8 @@
+class <%= stack_json["name"] %>
+  def initialize
+    @stack = []
+    <% mixins.each do |mixin| %>
+      <%= mixin.render_method("initialize") %>
+    <% end %>
+  end
+end

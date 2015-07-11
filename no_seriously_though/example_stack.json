@@ -1,0 +1,15 @@
+{
+	"name": "MinAndSumStack",
+	"type": "Stack",
+	"mixins": [
+		{
+			"type": "InvertibleReductionOperationMemoizer",
+			"properties": {
+				"target": "sum",
+				"function": "$1 + $2",
+				"inverse": "$1 - $2"
+			},
+			"provides": ["sum"]
+		}
+	]
+}

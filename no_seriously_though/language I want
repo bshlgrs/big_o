@@ -1,0 +1,7 @@
+I want to make a language which compiles to Ruby, Scala, Python, Javascript, etc. Making it compile to C is probably a lot harder, unless I consider memory management from the start and just ignore it in automatically memory managed languages.
+
+for example:
+
+class BinarySearchTree[A](value: ) {
+  def initialize()
+}
