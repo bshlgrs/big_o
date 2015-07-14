@@ -4,7 +4,15 @@ sealed abstract class Expression {
   def simplify: Expression = this
   def variables: List[Name]
 
-  def substitute(name: Name, expression: Expression): Expression
+  def substitute(names: Map[Name, Expression]): Expression
+
+  def separateOutCoefficient(): (Number, Option[NotANumber]) = this match {
+    case x: NotANumber => (Number(1), Some(x))
+    case x: Number => (x, None)
+  }
+
+  val base = this
+  lazy val exponent: Expression = Number(1)
 
   def +(other: Expression): Expression = (this, other) match {
     case (me: Sum, _) => me.addExpr(other)
@@ -12,15 +20,23 @@ sealed abstract class Expression {
     case _ => Sum(Map()).addExpr(this).addExpr(other)
   }
 
-  def *(other: Expression): Expression = Product(Set(this, other))
+  def *(other: Expression): Expression = (this, other) match {
+    case (me: Product, _) => me.addFactor(other)
+    case (_, them: Product) => them.addFactor(this)
+    case _ => Product(Set(this)).addFactor(other)
+  }
 }
 
 trait NotANumber extends Expression
 
-case class Sum(things: Map[NotANumber, Number], constant: Number = Number(0)) extends Expression with NotANumber {
+case class Sum(things: Map[Option[NotANumber], Number]) extends Expression with NotANumber {
+  val constant = things.getOrElse(None, Number(0))
+
+  val nonConstantTerms: Map[NotANumber, Number] = things.filter(_._1 != None).map((x) => x._1.get -> x._2)
+
   override def toString = {
     val constantString: List[String] = if (constant.value == 0) Nil else List(constant.toString)
-    val variablesString = things.toList.map((things) => {
+    val variablesString = nonConstantTerms.toList.map((things) => {
       if (things._2 == Number(1))
         things._1.toString
       else
@@ -30,59 +46,96 @@ case class Sum(things: Map[NotANumber, Number], constant: Number = Number(0)) ex
     "(" ++ (variablesString ++ constantString).reduceLeftOption(_ ++ " + " ++ _).getOrElse("") ++ ")"
   }
 
-  lazy val variables = things.keys.flatMap(_.variables).toList
+  lazy val variables: List[Name] = things.keys.flatMap((x) => if (x == None) Nil else x.get.variables).toList
 
-  def substitute(name: Name, expression: Expression) = {
-    Sum.fromList(things.toList.map((tuple) => tuple._1.substitute(name, expression) * tuple._2)) + constant
+  def substitute(map: Map[Name, Expression]) = {
+    Sum.fromList(nonConstantTerms.toList.map((tuple) => tuple._1.substitute(map) * tuple._2)) + constant
   }
 
   def addExpr(expr: Expression): Sum = {
-    println(s"this is $this, expr is $expr")
-    expr match {
-      case number: Number => this.copy(constant = this.constant + number)
-      case nan: NotANumber => {
-        val (coefficient, nonNumericExpr) = expr match {
-          case Product(stuff) => {
-            val partition = stuff.partition(_.isInstanceOf[Number])
-            (Number(partition._1.map(_.asInstanceOf[Number].value).product),
-              Product(partition._2).simplify.asInstanceOf[NotANumber])
-          }
-          case nan: NotANumber => (Number(1), nan)
-          case Number(_) => ???
-        }
-
-        this.things.get(nonNumericExpr) match {
-          case Some(currentCoefficient) =>
-            Sum(this.things - nonNumericExpr ++ Map(nonNumericExpr -> (coefficient + currentCoefficient)), this.constant)
-          case None => Sum(this.things ++ Map(nonNumericExpr -> coefficient), this.constant)
-        }
-      }
-    }
+    val (coefficient, nonNumericExpr) = expr.separateOutCoefficient()
+    val newCoefficient = things.getOrElse(nonNumericExpr, Number(0)) + coefficient
+    val newMap = if (newCoefficient.value == 0) Map() else Map(nonNumericExpr -> newCoefficient)
+    Sum(this.things - nonNumericExpr ++ newMap)
   }
 }
 
 object Sum {
   def fromList(things: List[Expression]): Expression = {
-    println(s"things are $things")
-    val result = things.reduce(_ + _)
-    println(s"result is $result")
-    result
+    things.length match {
+      case 0 => Number(0)
+      case 1 => things.head
+      case _ => things.reduce(_ + _)
+    }
   }
 }
 
-case class Product(things: Set[Expression]) extends Expression with NotANumber {
+case class Product(terms: Set[Expression]) extends Expression with NotANumber {
   override def toString = {
-    things.map((exp) => {exp.toString}).reduce(_ ++ " * " ++ _)
+    terms.map((exp) => {exp.toString}).reduce(_ ++ " * " ++ _)
   }
 
-  lazy val variables = things.flatMap(_.variables).toList
+  lazy val variables = terms.flatMap(_.variables).toList
 
-  def substitute(name: Name, expression: Expression) = Product(things.map(_.substitute(name, expression)))
+  def substitute(map: Map[Name, Expression]) = terms.toList.map(_.substitute(map)).reduce(_ * _)
 
-  override def simplify = things.size match {
+  override def simplify = terms.size match {
     case 0 => Number(1)
-    case 1 => things.toList.head
+    case 1 => terms.toList.head
     case n => this
+  }
+
+  override def separateOutCoefficient() = {
+    val partition = terms.partition(_.isInstanceOf[Number])
+
+    val coef = Number(partition._1.map(_.asInstanceOf[Number].value).product)
+    val product = Product(partition._2).simplify
+
+    product match {
+      case x: Number => (coef * x, None)
+      case p: NotANumber => (coef, Some(p))
+    }
+  }
+
+  def getPowerForBase(base: Expression): Expression = {
+    val relevantTerms = terms.filter(_.base == base)
+    relevantTerms.size match {
+      case 0 => Number(0)
+      case 1 => relevantTerms.toList.head
+      case _ => throw new RuntimeException("invariant violated")
+    }
+  }
+
+  def addFactor(factor: Expression): Expression = {
+    val simplifiedFactor = factor.simplify
+    val oldExponent = getPowerForBase(simplifiedFactor.base)
+    val newExponent = oldExponent + simplifiedFactor.exponent
+
+    val otherFactors = terms.filter(_.base != simplifiedFactor.base)
+
+    newExponent match {
+      case Number(0) => Product(otherFactors)
+      case Number(1) => Product(otherFactors + simplifiedFactor.base)
+      case _ => Product(otherFactors + Power(simplifiedFactor.base, newExponent))
+    }
+  }
+}
+
+case class Power(_base: Expression, _exponent: Expression) extends Expression with NotANumber {
+  override val base = _base
+  override lazy val exponent = _exponent
+  override def toString = s"($base)**($exponent)"
+
+  val variables = base.variables ++ exponent.variables
+  def substitute(map: Map[Name, Expression]) = {
+    Power(base.substitute(map), exponent.substitute(map))
+  }
+
+  override def simplify() = {
+    if (exponent == Number(1))
+      base
+    else
+      this
   }
 }
 
@@ -91,7 +144,7 @@ case class VariableExpression(name: Name) extends Expression with NotANumber {
 
   val variables = List(name)
 
-  def substitute(otherName: Name, expression: Expression) = if (otherName == name) expression else this
+  def substitute(map: Map[Name, Expression]) = if (map.contains(name)) map(name) else this
 }
 
 case class Number(value: Int) extends Expression {
@@ -99,26 +152,29 @@ case class Number(value: Int) extends Expression {
   val variables = List()
 
   def +(other: Number) = Number(this.value + other.value)
-  def substitute(name: Name, expression: Expression) = this
+  def *(other: Number) = Number(this.value * other.value)
+  def **(other: Number) = Number(Math.pow(this.value, other.value).toInt)
+  def substitute(map: Map[Name, Expression]) = this
 }
 
 class DummyVariableExpression extends Expression with NotANumber {
   override def toString = "dummy"
   val variables = List()
 
-  def substitute(name: Name, expression: Expression) = this
+  def substitute(map: Map[Name, Expression]) = this
 }
 
 object Tester {
   implicit def intToNumber(value: Int): Number = Number(value)
-  implicit def stringToVariableExpression(name: String): VariableExpression = VariableExpression(Name(name))
+  implicit def stringToName(name: String): Name = Name(name)
+  implicit def nameToVariableExpression(name: Name): VariableExpression = VariableExpression(name)
 
   def main (args: Array[String]) {
     val x = VariableExpression(Name("x"))
     val y = VariableExpression(Name("y"))
 
-    val expr = 4 + 3 * y
+    val expr = 4 + Number(3) * y
     println(expr)
-    println(expr.substitute(Name("y"), x))
+    println(expr.substitute(Map(Name("y") -> Number(3))))
   }
 }
