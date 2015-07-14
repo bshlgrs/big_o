@@ -7,8 +7,33 @@
 		revision="1.0"
 		conf="runtime"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20150611212944"/>
+		date="20150713215305"/>
 	<dependencies>
+		<module organisation="com.google.code.javaparser" name="javaparser">
+			<revision name="1.0.11" status="release" pubdate="20140202123944" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://code.google.com/p/javaparser/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="2">
+				<metadata-artifact status="no" details="" size="4156" time="0" location="/Users/bshlegeris/.ivy2/cache/com.google.code.javaparser/javaparser/ivy-1.0.11.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/google/code/javaparser/javaparser/1.0.11/javaparser-1.0.11.pom"/>
+				<caller organisation="default" name="data-structure-maker_2.11" conf="compile, runtime" rev="1.0.11" rev-constraint-default="1.0.11" rev-constraint-dynamic="1.0.11" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="javaparser" type="jar" ext="jar" status="no" details="" size="289629" time="0" location="/Users/bshlegeris/.ivy2/cache/com.google.code.javaparser/javaparser/jars/javaparser-1.0.11.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/google/code/javaparser/javaparser/1.0.11/javaparser-1.0.11.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jruby" name="jrubyparser">
+			<revision name="0.5.3" status="release" pubdate="20131124110544" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="Common Public License - v 1.0" url="http://www-128.ibm.com/developerworks/library/os-cpl.html"/>
+				<license name="GNU General Public License Version 2" url="http://www.gnu.org/copyleft/gpl.html"/>
+				<license name="GNU Lesser General Public License Version 2.1" url="http://www.gnu.org/licenses/lgpl.html"/>
+				<metadata-artifact status="no" details="" size="2946" time="0" location="/Users/bshlegeris/.ivy2/cache/org.jruby/jrubyparser/ivy-0.5.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/jruby/jrubyparser/0.5.3/jrubyparser-0.5.3.pom"/>
+				<caller organisation="default" name="data-structure-maker_2.11" conf="compile, runtime" rev="0.5.3" rev-constraint-default="0.5.3" rev-constraint-dynamic="0.5.3" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="jrubyparser" type="jar" ext="jar" status="no" details="" size="1597978" time="0" location="/Users/bshlegeris/.ivy2/cache/org.jruby/jrubyparser/jars/jrubyparser-0.5.3.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/jruby/jrubyparser/0.5.3/jrubyparser-0.5.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
 		<module organisation="org.scala-lang" name="scala-library">
 			<revision name="2.11.5" status="release" pubdate="20150106163212" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.5/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
 				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>

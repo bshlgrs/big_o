@@ -1,0 +1,134 @@
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mInitial source changes: [0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set()[0m
+[0m[[0mdebug[0m] [0mRemoved products: Set()[0m
+[0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala)[0m
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m	product: Set()[0m
+[0m[[0mdebug[0m] [0m	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala, /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 12 sources: invalidated sources (12) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 12 Scala sources to /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/target/scala-2.11/classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.11.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 3ce6061e, interfacing (CompilerInterface) with Scala compiler version 2.11.5[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/classes:/Users/bshlegeris/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.5.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/target/scala-2.11/classes:/Users/bshlegeris/.ivy2/cache/org.jruby/jrubyparser/jars/jrubyparser-0.5.3.jar:/Users/bshlegeris/.ivy2/cache/com.google.code.javaparser/javaparser/jars/javaparser-1.0.11.jar[0m
+[0m[[33mwarn[0m] [0mthere was one deprecation warning; re-run with -deprecation for details[0m
+[0m[[33mwarn[0m] [0mthere were 6 feature warnings; re-run with -feature for details[0m
+[0m[[33mwarn[0m] [0mtwo warnings found[0m
+[0m[[0mdebug[0m] [0mScala compilation took 7.207800809 s[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala source file has the following implicit definitions changed:[0m
+[0m[[0mdebug[0m] [0m	stringToName, intToNumber, nameToVariableExpression.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala source file has the following implicit definitions changed:[0m
+[0m[[0mdebug[0m] [0m	stringToName, intToNumber, nameToVariableExpression.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following member ref dependencies of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala are invalidated:[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala[0m
+[0m[[0mdebug[0m] [0m	/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/OrderByClause.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, $asInstanceOf, productArity, equals, asInstanceOf, synchronized, $isInstanceOf, expr, canEqual, productPrefix, notifyAll, isInstanceOf, <init>, GoodOrderByClause, ==, clone, copy, toString, !=, getClass, copy$default$1, nodeExpr, ne, OrderByClause, eq, productIterator, ##, finalize, productElement, hashCode, BadOrderByClause.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala: Set(<init>, OrderByClause)[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/LimitByClause.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, number, wait, copy$default$2, $asInstanceOf, productArity, equals, asInstanceOf, synchronized, RandomShitLimitByClause, $isInstanceOf, canEqual, productPrefix, VariableSizeConstantLimitByClause, notifyAll, isInstanceOf, <init>, ConstantSizeConstantLimitByClause, ==, LimitByClause, clone, nodeExprToMaximise, copy, paramAndNodeExprToMaximise, toString, !=, getClass, copy$default$1, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala: Set(<init>, LimitByClause)[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/java_transpiler/JavaParserTester.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, $asInstanceOf, JavaParserTester, equals, asInstanceOf, synchronized, $isInstanceOf, main, notifyAll, isInstanceOf, ==, clone, toString, !=, getClass, ne, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Reduction.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, copy$default$2, $asInstanceOf, mapper, productArity, equals, asInstanceOf, synchronized, $isInstanceOf, Reduction, canEqual, productPrefix, notifyAll, readResolve, isInstanceOf, <init>, SelectStar, ==, clone, copy$default$3, copy, toString, !=, getClass, copy$default$1, start, ne, eq, productIterator, ##, finalize, FoldReduction, productElement, hashCode, reducer.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala: Set(Reduction, <init>)[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/ruby_to_queries/RubyParserTester.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, $asInstanceOf, parseContents, equals, asInstanceOf, synchronized, $isInstanceOf, main, notifyAll, isInstanceOf, ==, RubyParserTester, clone, toString, !=, getClass, ne, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, wait, $asInstanceOf, equals, whereClauses, asInstanceOf, synchronized, $isInstanceOf, Query, notifyAll, isInstanceOf, <init>, limiter, ==, clone, reduction, toString, !=, getClass, ne, parameters, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, name, wait, copy$default$2, $asInstanceOf, productArity, equals, asInstanceOf, params, synchronized, $isInstanceOf, DataStructureApi, canEqual, productPrefix, notifyAll, isInstanceOf, <init>, ==, clone, copy, toString, MyFunction, !=, functions, getClass, copy$default$1, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Name.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, name, wait, Name, $asInstanceOf, productArity, equals, asInstanceOf, synchronized, $isInstanceOf, canEqual, productPrefix, notifyAll, isInstanceOf, <init>, ==, clone, copy, toString, !=, getClass, copy$default$1, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/DataStructureApi.scala: Set(name, Name, asInstanceOf, isInstanceOf, <init>, ==, toString, eq)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/Expression.scala: Set(name, Name, asInstanceOf, isInstanceOf, <init>, ==, toString, !=, ne, eq)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/cas/CasFunction.scala: Set(name, Name, asInstanceOf, isInstanceOf, <init>, ==, toString, ne, eq)[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala: Set(Name, <init>)[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	clauses, notify, wait, WhereClauses, $asInstanceOf, equals, asInstanceOf, synchronized, $isInstanceOf, notifyAll, isInstanceOf, <init>, ==, clone, toString, !=, getClass, ne, eq, ##, finalize, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/Query.scala: Set(WhereClauses, <init>)[0m
+[0m[[0mdebug[0m] [0mInvalidating /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala...[0m
+[0m[[0mdebug[0m] [0mInvalidating (transitively) by inheritance from /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala...[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala)[0m
+[0m[[0mdebug[0m] [0mInvalidated by transitive inheritance dependency: Set(/Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala)[0m
+[0m[[0mdebug[0m] [0mThe /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClause.scala source file has the following regular definitions changed:[0m
+[0m[[0mdebug[0m] [0m	notify, ParameterGreaterThanWhereClause, wait, copy$default$2, $asInstanceOf, productArity, equals, asInstanceOf, synchronized, $isInstanceOf, canEqual, productPrefix, IncludesEqual, notifyAll, isInstanceOf, <init>, parameterFunction, ConstantWhereClause, ==, clone, nodeFunction, ParameterEqualityWhereClause, copy$default$3, copy, toString, WhereClause, !=, getClass, copy$default$1, ne, eq, productIterator, ##, finalize, productElement, hashCode.[0m
+[0m[[0mdebug[0m] [0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0mdebug[0m] [0mThe following modified names cause invalidation of /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/src/main/scala/queries/WhereClauses.scala: Set(<init>, WhereClause)[0m
+[0m[[0mdebug[0m] [0mNew invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mInitial set of included nodes: Set()[0m
+[0m[[0mdebug[0m] [0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0mdebug[0m] [0m	Set()[0m
+[0m[[0mdebug[0m] [0mAll newly invalidated sources after taking into account (previously) recompiled sources:Set()[0m
