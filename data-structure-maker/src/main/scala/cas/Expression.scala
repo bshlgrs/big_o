@@ -1,8 +1,10 @@
 package cas
 
+import scala.util.Random
+
 sealed abstract class Expression {
   lazy val simplify: Expression = this
-  def variables: List[Name]
+  def variables: Set[Name]
 
   def substitute(names: Map[Name, Expression]): Expression
 
@@ -28,6 +30,17 @@ sealed abstract class Expression {
     case (_, them: Product) => them.addFactor(this)
     case _ => Product(Set(this)).addFactor(other)
   }
+
+  def monteCarloEquals(other: Expression): Boolean = {
+    if (this.variables != other.variables) {
+      false
+    } else {
+      val r = new Random
+      val values = this.variables.map(_ -> Number(r.nextInt(9999))).toMap
+
+      this.substitute(values) == other.substitute(values)
+    }
+  }
 }
 
 trait NotANumber extends Expression
@@ -37,25 +50,13 @@ case class Sum(things: Map[Option[NotANumber], Number]) extends Expression with 
 
   val nonConstantTerms: Map[NotANumber, Number] = things.filter(_._1 != None).map((x) => x._1.get -> x._2)
 
-//  override def toString = {
-//    val constantString: List[String] = if (constant.value == 0) Nil else List(constant.toString)
-//    val variablesString = nonConstantTerms.toList.map((things) => {
-//      if (things._2 == Number(1))
-//        things._1.toString
-//      else
-//        s"${things._2} * ${things._1}"
-//    })
-//
-//    "(" ++ (variablesString ++ constantString).reduceLeftOption(_ ++ " + " ++ _).getOrElse("") ++ ")"
-//  }
-
   override lazy val simplify = {
     Sum.fromList(explicitTerms)
   }
 
   lazy val explicitTerms: List[Expression] = things.toList.map(tuple => tuple._1.getOrElse(Number(1)) * tuple._2)
 
-  lazy val variables: List[Name] = things.keys.flatMap((x) => if (x == None) Nil else x.get.variables).toList
+  lazy val variables: Set[Name] = things.keys.flatMap((x) => if (x == None) Nil else x.get.variables).toSet
 
   def substitute(map: Map[Name, Expression]) = {
     Sum.fromList(nonConstantTerms.toList.map((tuple) => tuple._1.substitute(map) * tuple._2)) + constant
@@ -113,7 +114,7 @@ case class Product(terms: Set[Expression]) extends Expression with NotANumber {
     case n => this
   }
 
-  lazy val variables = terms.flatMap(_.variables).toList
+  lazy val variables = terms.flatMap(_.variables)
 
   def substitute(map: Map[Name, Expression]) = terms.toList.map(_.substitute(map)).reduce(_ * _)
 
@@ -127,11 +128,10 @@ case class Product(terms: Set[Expression]) extends Expression with NotANumber {
     val partition = terms.partition(_.isInstanceOf[Number])
 
     val coef = Number(partition._1.map(_.asInstanceOf[Number].value).product)
-    val product = Product(partition._2)
 
-    product match {
-      case x: Number => (coef * x, None)
-      case p: NotANumber => (coef, Some(p))
+    partition._2.size match {
+      case 0 => (coef, None)
+      case _ => (coef, Some(Product(partition._2)))
     }
   }
 
@@ -185,14 +185,14 @@ object Power {
 case class VariableExpression(name: Name) extends Expression with NotANumber {
   override def toString = name.name
 
-  val variables = List(name)
+  val variables = Set(name)
 
   def substitute(map: Map[Name, Expression]) = if (map.contains(name)) map(name) else this
 }
 
 case class Number(value: Int) extends Expression {
   override def toString = value.toString
-  val variables = List()
+  val variables = Set[Name]()
 
   def +(other: Number) = Number(this.value + other.value)
   def *(other: Number) = Number(this.value * other.value)
@@ -202,7 +202,7 @@ case class Number(value: Int) extends Expression {
 
 class DummyVariableExpression extends Expression with NotANumber {
   override def toString = "dummy"
-  val variables = List()
+  val variables = Set[Name]()
 
   def substitute(map: Map[Name, Expression]) = this
 }
@@ -217,7 +217,7 @@ object Tester {
     val y = VariableExpression(Name("y"))
 
 
-    val expr = 4 * x
+    val expr = y + 0
     val expr2= Sum(Map(Some(Power(x,Sum(Map(None -> 1)))) -> 4, Some(Power(y,Sum(Map(None -> 1)))) -> 3))
     println(expr)
 //    println(expr.substitute(Map(Name("y") -> Number(3))))

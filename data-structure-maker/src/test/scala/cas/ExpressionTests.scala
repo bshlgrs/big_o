@@ -27,10 +27,35 @@ object ExpressionGenerators {
 class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
   import ExpressionGenerators._
 
+  implicit lazy val arbInteger: Arbitrary[Int] = Arbitrary(Gen.chooseNum(-10, 10))
+
+  property("Addition works on numbers") {
+    forAll { (lhs: Int, rhs: Int) =>
+      Number(lhs) + Number(rhs) must be (Number(lhs + rhs))
+    }
+  }
+
   property("Addition is commutative") {
     forAll { (lhs:Expression, rhs: Expression) =>
-      println(s"$lhs, $rhs")
       (lhs + rhs).simplify must be((rhs + lhs).simplify)
+    }
+  }
+
+  property("Addition is commutative according to monte carlo") {
+    forAll { (lhs:Expression, rhs: Expression) =>
+      (lhs + rhs).monteCarloEquals(rhs + lhs) must be(true)
+    }
+  }
+
+  property("Addition is associative") {
+    forAll { (a: Expression, b: Expression, c: Expression) =>
+      ((a + b) + c).simplify must be(a + (b + c))
+    }
+  }
+
+  property("Addition is associative according to monte carlo") {
+    forAll { (a:Expression, b: Expression, c: Expression) =>
+      ((a + b) + c).monteCarloEquals(a + (b + c)) must be(true)
     }
   }
 

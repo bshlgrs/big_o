@@ -4,7 +4,7 @@
 		module="data-structure-maker$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20150713220557"
+		publication="20150714213244"
 	/>
 	<configurations>
 		<conf name="default" visibility="public" description=""/>

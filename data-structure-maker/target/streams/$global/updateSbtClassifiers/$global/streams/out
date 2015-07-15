@@ -710,9 +710,9 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-agent;0.13.7!test-agent.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#test-interface;1.0!test-interface.jar
 [debug] 	[NOT REQUIRED] org.scala-sbt#apply-macro;0.13.7!apply-macro.jar
-[debug] :: resolution report :: resolve 384ms :: artifacts dl 21ms
+[debug] :: resolution report :: resolve 228ms :: artifacts dl 11ms
 [debug] 	report for default#data-structure-maker$sbt_2.11;1.0 default produced in /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/target/resolution-cache/reports/default-data-structure-maker$sbt_2.11-default.xml
-[debug] 	resolve done (384ms resolve - 21ms download)
+[debug] 	resolve done (228ms resolve - 11ms download)
 [debug] Using inline dependencies specified in Scala.
 [debug] :: resolving dependencies :: default#data-structure-maker$sources_2.11;1.0
 [debug] 	confs: [default]
@@ -1042,6 +1042,6 @@
 [debug] 	[NOT REQUIRED] org.scala-sbt#precompiled-2_9_3;0.13.7!precompiled-2_9_3.jar(src)
 [debug] 	[NOT REQUIRED] net.virtual-void#sbt-dependency-graph;0.7.4!sbt-dependency-graph.jar(src)
 [debug] 	[NOT REQUIRED] com.github.mdr#ascii-graphs_2.10;0.0.3!ascii-graphs_2.10.jar(src)
-[debug] :: resolution report :: resolve 81ms :: artifacts dl 27ms
+[debug] :: resolution report :: resolve 55ms :: artifacts dl 23ms
 [debug] 	report for default#data-structure-maker$sources_2.11;1.0 default produced in /Users/bshlegeris/Dropbox/repos/big_o/data-structure-maker/target/resolution-cache/reports/default-data-structure-maker$sources_2.11-default.xml
-[debug] 	resolve done (81ms resolve - 27ms download)
+[debug] 	resolve done (55ms resolve - 23ms download)
