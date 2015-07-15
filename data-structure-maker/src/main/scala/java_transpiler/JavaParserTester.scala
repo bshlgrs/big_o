@@ -2,13 +2,21 @@ package java_transpiler
 
 import japa.parser.JavaParser
 import java.io.StringBufferInputStream
+import scala.collection.JavaConverters._
+
+import japa.parser.ast.CompilationUnit
 
 object JavaParserTester {
   def main(args: Array[String]) {
+    val node = parseJavaFile("")
+
+    println(RubyOutputter.output(node))
+  }
+
+  def parseJavaFile(filename: String): CompilationUnit = {
     // i know this is deprecated but IDGAF
     val stringBuffer = new StringBufferInputStream(javaString)
-    val x = JavaParser.parse(stringBuffer)
-    println(x)
+    JavaParser.parse(stringBuffer)
   }
 
   val javaString =
@@ -22,6 +30,8 @@ object JavaParserTester {
            return this.x;
          }
        }
+
+       class OtherThing {}
     """
 
 }
