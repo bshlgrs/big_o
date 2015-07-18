@@ -10,14 +10,19 @@ import org.scalacheck.Prop.forAll
 object ExpressionGenerators {
   lazy val genExpression: Gen[Expression] = for {
     variable <- genVariable
-    sum <- genSum
+//    sum <- genSum
     constant <- genConstant
-    result <- Gen.oneOf(variable, constant, sum)
+    result <- Gen.oneOf(variable, constant)
   } yield result
 
-  lazy val genVariable = Gen.oneOf("x", "y", "z").map((name: String) => VariableExpression(Name(name)))
+  lazy val genVariable: Gen[VariableExpression] = {
+    Gen.oneOf("x", "y", "z").map((name: String) => VariableExpression(Name(name)))
+  }
 
-  lazy val genSum = Gen.nonEmptyListOf(genVariable).map(Sum.fromList)
+  lazy val genSum: Gen[Expression] = for {
+    x <- genExpression
+    y <- genExpression
+  } yield x + y
 
   lazy val genConstant = Gen.oneOf(Number(0), Number(1), Number(2))
 
@@ -37,7 +42,8 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
 
   property("Addition is commutative") {
     forAll { (lhs:Expression, rhs: Expression) =>
-      (lhs + rhs).simplify must be((rhs + lhs).simplify)
+      println(lhs, rhs, lhs + rhs, rhs + lhs)
+      (lhs + rhs) must be(rhs + lhs)
     }
   }
 

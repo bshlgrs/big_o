@@ -8,27 +8,20 @@ sealed abstract class Expression {
 
   def substitute(names: Map[Name, Expression]): Expression
 
-  def separateOutCoefficient(): (Number, Option[NotANumber]) = this match {
-    case x: NotANumber => (Number(1), Some(x))
-    case x: Number => (x, None)
-  }
-
-  val base = this
-  lazy val exponent: Expression = Number(1)
-
-  def desumify = this
-  def deproductify = this
-
   def +(other: Expression): Expression = (this, other) match {
-    case (me: Sum, _) => me.addExpr(other)
-    case (_, them: Sum) => them.addExpr(this)
-    case _ => Sum.oneItemSum(this) + other
+    case (x: Sum, y: Sum) => x.summands.foldLeft(y: Expression)(_ + _)
+    case (x: Sum, _) => Sum.addTerm(x.summands, other)
+    case (_, y: Sum) => Sum.addTerm(y.summands, this)
+    case (Number(0), x) => x
+    case (x, Number(0)) => x
+    case (_, _) => Sum.addTerm(Set(this), other)
   }
 
   def *(other: Expression): Expression = (this, other) match {
-    case (me: Product, _) => me.addFactor(other)
-    case (_, them: Product) => them.addFactor(this)
-    case _ => Product(Set(this)).addFactor(other)
+    case (x: Product, y: Product) => x.terms.foldLeft(y: Expression)(_ * _)
+    case (x: Product, _) => Product.addFactor(x.terms, other)
+    case (_, y: Product) => Product.addFactor(y.terms, this)
+    case (_, _) => Product.addFactor(Set(this), other)
   }
 
   def monteCarloEquals(other: Expression): Boolean = {
@@ -43,146 +36,91 @@ sealed abstract class Expression {
   }
 }
 
-trait NotANumber extends Expression
+case class Sum(summands: Set[Expression]) extends Expression {
+  assert(summands.size > 1, s"summands are $summands")
+  assert(summands.count(_.isInstanceOf[Number]) < 2, s"summands are $summands")
+  assert(summands.find(_ == Number(0)) == None, s"summands are $summands")
 
-case class Sum(things: Map[Option[NotANumber], Number]) extends Expression with NotANumber {
-  val constant = things.getOrElse(None, Number(0))
-
-  val nonConstantTerms: Map[NotANumber, Number] = things.filter(_._1 != None).map((x) => x._1.get -> x._2)
-
-  override lazy val simplify = {
-    Sum.fromList(explicitTerms)
-  }
-
-  lazy val explicitTerms: List[Expression] = things.toList.map(tuple => tuple._1.getOrElse(Number(1)) * tuple._2)
-
-  lazy val variables: Set[Name] = things.keys.flatMap((x) => if (x == None) Nil else x.get.variables).toSet
+  lazy val variables: Set[Name] = summands.flatMap(_.variables)
 
   def substitute(map: Map[Name, Expression]) = {
-    Sum.fromList(nonConstantTerms.toList.map((tuple) => tuple._1.substitute(map) * tuple._2)) + constant
-  }
-
-  def addExpr(expr: Expression): Expression = {
-    expr match {
-      case Sum(insideThings) => insideThings.foldLeft(this: Expression) { (currentValue, newTuple ) =>
-        currentValue + newTuple._1.getOrElse(Number(1)) * newTuple._2
-      }
-      case _ => {
-        val (coefficient, nonNumericExpr) = expr.separateOutCoefficient()
-        val newCoefficient = things.getOrElse(nonNumericExpr, Number(0)) + coefficient
-        val newMap = if (newCoefficient.value == 0) Map() else Map(nonNumericExpr -> newCoefficient)
-        Sum(this.things - nonNumericExpr ++ newMap)
-      }
-    }
-  }
-
-  override def desumify(): Expression = {
-    this.things.size match {
-      case 0 => Number(0)
-      case 1 => this.things.toList.head match {
-        case (None, x) => x
-        case (Some(x), y) => Product(Set(x, y))
-      }
-      case 2 => this
-    }
+    summands.toList.map(_.substitute(map)).reduce(_ + _)
   }
 }
 
 object Sum {
-  def fromList(things: List[Expression]): Expression = {
-    things.length match {
-      case 0 => Number(0)
-      case 1 => things.head
-      case _ => things.reduce(_ + _)
+  import ExpressionHelper._
+
+  def addTerm(summands: Set[Expression], newSummand: Expression): Expression = {
+    assert(!newSummand.isInstanceOf[Sum])
+
+    val (newSummandConstantTerm, mbNewSummandExpression) = splitCoefficient(newSummand)
+
+    if (newSummandConstantTerm.value == 0)
+      buildFromValidSummandsSet(summands)
+    else {
+      val (otherItems, mbRelatedItem) = grabByPredicate(summands, { (x: Expression) =>
+        splitCoefficient(x)._2 == mbNewSummandExpression })
+
+      mbRelatedItem match {
+        case None => buildFromValidSummandsSet(otherItems ++ Set(newSummand))
+        case Some(item) => {
+          val newCoefficientValue = newSummandConstantTerm.value + splitCoefficient(item)._1.value
+          if (newCoefficientValue == 0)
+            buildFromValidSummandsSet(otherItems)
+          else {
+            val thingToAdd = mbNewSummandExpression.map(_ * Number(newCoefficientValue)).getOrElse(Number(newCoefficientValue))
+            buildFromValidSummandsSet(otherItems ++ Set(thingToAdd))
+          }
+        }
+      }
     }
   }
 
-  def oneItemSum(thing: Expression) = {
-    val (coefficient, nonNumericExpr) = thing.separateOutCoefficient()
-    Sum(Map(nonNumericExpr -> coefficient))
+  def buildFromValidSummandsSet(summands: Set[Expression]): Expression = {
+    summands.size match {
+      case 0 => Number(0)
+      case 1 => summands.head
+      case _ => Sum(summands)
+    }
   }
 }
 
-case class Product(terms: Set[Expression]) extends Expression with NotANumber {
-//  override def toString = {
-//    terms.map((exp) => {exp.toString}).reduce(_ ++ " * " ++ _)
-//  }
-
-  override def deproductify() = terms.size match {
-    case 0 => Number(1)
-    case 1 => terms.toList.head
-    case n => this
-  }
+case class Product(terms: Set[Expression]) extends Expression {
+  assert(terms.size > 1, s"terms are $terms")
+  assert(terms.count(_.isInstanceOf[Number]) <= 1, s"terms are $terms")
 
   lazy val variables = terms.flatMap(_.variables)
 
   def substitute(map: Map[Name, Expression]) = terms.toList.map(_.substitute(map)).reduce(_ * _)
+}
 
-  override lazy val simplify = terms.size match {
-    case 0 => Number(1)
-    case 1 => terms.toList.head
-    case n => this
+object Product {
+  def addFactor(terms: Set[Expression], newTerm: Expression): Expression = {
+    Product.buildFromValidTermsSet(terms ++ Set(newTerm))
   }
 
-  override def separateOutCoefficient() = {
-    val partition = terms.partition(_.isInstanceOf[Number])
-
-    val coef = Number(partition._1.map(_.asInstanceOf[Number].value).product)
-
-    partition._2.size match {
-      case 0 => (coef, None)
-      case _ => (coef, Some(Product(partition._2)))
+  def buildFromValidTermsSet(terms: Set[Expression]): Expression = {
+    terms.size match {
+      case 0 => Number(1)
+      case 1 => terms.head
+      case _ => Product(terms)
     }
-  }
-
-  def getPowerForBase(base: Expression): Expression = {
-    val relevantTerms = terms.filter(_.base == base)
-    relevantTerms.size match {
-      case 0 => Number(0)
-      case 1 => relevantTerms.toList.head
-      case _ => throw new RuntimeException("invariant violated")
-    }
-  }
-
-  def addFactor(factor: Expression): Expression = {
-    val oldExponent = getPowerForBase(factor.base)
-    val newExponent = (oldExponent + factor.exponent).desumify
-
-    val otherFactors = terms.filter(_.base != factor.base)
-
-    (newExponent match {
-      case Number(0) => Product(otherFactors)
-      case Number(1) => Product(otherFactors + factor.base)
-      case _ => Product(otherFactors + Power(factor.base, newExponent))
-    }).deproductify()
   }
 }
 
-case class Power(_base: Expression, _exponent: Expression) extends Expression with NotANumber {
-  override val base = _base
-  override lazy val exponent = _exponent
-
+case class Power(base: Expression, exponent: Expression) extends Expression {
   val variables = base.variables ++ exponent.variables
+
+  assert(base != Number(1))
+  assert(exponent != Number(1))
 
   def substitute(map: Map[Name, Expression]) = {
     Power(base.substitute(map), exponent.substitute(map))
   }
-
-  override lazy val simplify = {
-    if (exponent.simplify == Number(1))
-      base
-    else
-      Power(base.simplify, exponent.simplify)
-  }
 }
 
-object Power {
-  def build(base: Expression, exponent: Expression) = {
-    Power(base, exponent).simplify
-  }
-}
-
-case class VariableExpression(name: Name) extends Expression with NotANumber {
+case class VariableExpression(name: Name) extends Expression {
   override def toString = name.name
 
   val variables = Set(name)
@@ -200,7 +138,7 @@ case class Number(value: Int) extends Expression {
   def substitute(map: Map[Name, Expression]) = this
 }
 
-class DummyVariableExpression extends Expression with NotANumber {
+class DummyVariableExpression extends Expression {
   override def toString = "dummy"
   val variables = Set[Name]()
 
@@ -217,11 +155,27 @@ object Tester {
     val y = VariableExpression(Name("y"))
 
 
-    val expr = y + 0
-    val expr2= Sum(Map(Some(Power(x,Sum(Map(None -> 1)))) -> 4, Some(Power(y,Sum(Map(None -> 1)))) -> 3))
+    val expr = y + 0 + 0
     println(expr)
-//    println(expr.substitute(Map(Name("y") -> Number(3))))
+  }
+}
 
+object ExpressionHelper {
+  def grabByPredicate[A](set: Set[A], predicate: A => Boolean): (Set[A], Option[A]) = {
+    val (specialThings, remainingItems) = set.partition(predicate)
+    assert(specialThings.size <= 1)
+    (remainingItems, specialThings.headOption)
+  }
 
+  def splitCoefficient(exp: Expression): (Number, Option[Expression]) = {
+    exp match {
+      case n : Number => (n, None)
+      case p : Product => {
+        val number = p.terms.find(_.isInstanceOf[Number]).getOrElse(Number(1)).asInstanceOf[Number]
+        val exp = Product.buildFromValidTermsSet(p.terms.filterNot(_.isInstanceOf[Number]))
+        (number, Some(exp))
+      }
+      case _ => (Number(1), Some(exp))
+    }
   }
 }
