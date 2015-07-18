@@ -9,10 +9,7 @@ import org.scalacheck.Prop.forAll
 
 object ExpressionGenerators {
   lazy val genExpression: Gen[Expression] = for {
-    variable <- genVariable
-//    sum <- genSum
-    constant <- genConstant
-    result <- Gen.oneOf(variable, constant)
+    result <- Gen.oneOf(genVariable, genConstant, genSum)
   } yield result
 
   lazy val genVariable: Gen[VariableExpression] = {
@@ -20,7 +17,7 @@ object ExpressionGenerators {
   }
 
   lazy val genSum: Gen[Expression] = for {
-    x <- genExpression
+    x <- genVariable
     y <- genExpression
   } yield x + y
 
@@ -34,15 +31,26 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
 
   implicit lazy val arbInteger: Arbitrary[Int] = Arbitrary(Gen.chooseNum(-10, 10))
 
+  property("Expression generator isn't buggy") {
+    forAll { (exp: Expression) =>
+      exp must be(exp)
+    }
+  }
+
   property("Addition works on numbers") {
     forAll { (lhs: Int, rhs: Int) =>
       Number(lhs) + Number(rhs) must be (Number(lhs + rhs))
     }
   }
 
+  property("Addition isn't buggy") {
+    forAll { (lhs:Expression, rhs: Expression) =>
+      (lhs + rhs) must be(lhs + rhs)
+    }
+  }
+
   property("Addition is commutative") {
     forAll { (lhs:Expression, rhs: Expression) =>
-      println(lhs, rhs, lhs + rhs, rhs + lhs)
       (lhs + rhs) must be(rhs + lhs)
     }
   }
@@ -68,6 +76,30 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
   property("Simplification only needs to be done once") {
     forAll { (exp:Expression) =>
       exp.simplify must be(exp.simplify.simplify)
+    }
+  }
+
+  property("Multiplication works on numbers") {
+    forAll { (lhs: Int, rhs: Int) =>
+      Number(lhs) * Number(rhs) must be (Number(lhs * rhs))
+    }
+  }
+
+  property("Multiplication works on expressions") {
+    forAll { (lhs: Expression, rhs: Expression) =>
+      lhs * rhs must be(lhs * rhs)
+    }
+  }
+
+  property("Multiplication is commutative") {
+    forAll { (lhs:Expression, rhs: Expression) =>
+      (lhs * rhs) must be(rhs * lhs)
+    }
+  }
+
+  property("Multiplication is associative") {
+    forAll { (a: Expression, b: Expression, c: Expression) =>
+      ((a * b) * c).simplify must be(a * (b * c))
     }
   }
 }
