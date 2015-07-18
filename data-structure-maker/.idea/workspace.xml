@@ -7,67 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1185cc2b-465c-4b88-9d11-50e6e79720d0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper$$anonfun$13.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper$$anonfun$14.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper$$anonfun$15.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genExpression$1$$anonfun$apply$1$$anonfun$apply$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genExpression$1$$anonfun$apply$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genSum$1$$anonfun$apply$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$1$$anonfun$apply$mcV$sp$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$2$$anonfun$apply$mcV$sp$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$3$$anonfun$apply$mcV$sp$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$4$$anonfun$apply$mcV$sp$4.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$5$$anonfun$apply$mcV$sp$5.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$6$$anonfun$apply$mcV$sp$6.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/DummyVariableExpression.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/DummyVariableExpression.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Expression$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Expression$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Expression.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Expression.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$arbExpression$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$arbExpression$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genExpression$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genExpression$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genSum$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genSum$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genVariable$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$$anonfun$genVariable$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionGenerators$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/ExpressionHelper.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$5.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$6.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$6.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$arbInteger$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests$$anonfun$arbInteger$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests.class" afterPath="$PROJECT_DIR$/target/scala-2.11/test-classes/cas/ExpressionTests.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Number$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Number$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Number.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Number.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Power$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Power$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Power.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Power.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$10.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$10.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$11.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$11.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$12.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$12.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$substitute$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$substitute$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$substitute$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$substitute$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$variables$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$$anonfun$variables$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Product.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$3.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$4.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$5.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$5.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$6.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$6.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$7.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$7.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$8.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$8.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$9.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$9.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$substitute$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$substitute$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$substitute$2.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$substitute$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$variables$1.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$$anonfun$variables$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Sum.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Tester$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/Tester$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/VariableExpression$.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/VariableExpression$.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/scala-2.11/classes/cas/VariableExpression.class" afterPath="$PROJECT_DIR$/target/scala-2.11/classes/cas/VariableExpression.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/cas/Expression.scala" afterPath="$PROJECT_DIR$/src/main/scala/cas/Expression.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala" afterPath="$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="data-structure-maker.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -98,21 +38,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Expression.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Expression.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/cas/Expression.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.51046026">
+            <state vertical-scroll-proportion="0.0">
               <caret line="123" column="65" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="65" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExpressionTests.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExpressionTests.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="96" column="5" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.50209206">
+              <caret line="103" column="3" selection-start-line="103" selection-start-column="3" selection-end-line="103" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -160,8 +100,8 @@
         <option value="$PROJECT_DIR$/src/main/scala/java_transpiler/ILClass.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/java_transpiler/JavaParserTester.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/java_transpiler/RubyOutputter.scala" />
-        <option value="$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/cas/Expression.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala" />
       </list>
     </option>
   </component>
@@ -1402,18 +1342,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/cas/Expression.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="96" column="5" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
+          <caret line="123" column="65" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="65" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/cas/Expression.scala">
+    <entry file="file://$PROJECT_DIR$/src/test/scala/cas/ExpressionTests.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.51046026">
-          <caret line="123" column="65" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.50209206">
+          <caret line="103" column="3" selection-start-line="103" selection-start-column="3" selection-end-line="103" selection-end-column="3" />
           <folding />
         </state>
       </provider>

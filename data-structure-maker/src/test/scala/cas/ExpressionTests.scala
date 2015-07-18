@@ -102,4 +102,10 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
       ((a * b) * c).simplify must be(a * (b * c))
     }
   }
+
+  property("Monte Carlo equals isn't obviously broken") {
+    forAll { (a: Expression, b: Expression) =>
+      a.monteCarloEquals(a + b) must be(b.monteCarloEquals(Number(0)))
+    }
+  }
 }
