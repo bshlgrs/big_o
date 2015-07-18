@@ -15,6 +15,8 @@ object JavaParserTester {
 
   def parseJavaFile(filename: String): CompilationUnit = {
     // i know this is deprecated but IDGAF
+    println(javaString)
+    println("... turns into")
     val stringBuffer = new StringBufferInputStream(javaString)
     JavaParser.parse(stringBuffer)
   }
@@ -23,15 +25,12 @@ object JavaParserTester {
     """
        class Counter {
          int x = 0;
-         void increment() {
-           this.x += 1;
+         void increase(int y) {
+           this.x += y;
          }
          int get() {
            return this.x;
          }
        }
-
-       class OtherThing {}
     """
-
 }

@@ -8,16 +8,17 @@ import org.jrubyparser.{CompatVersion, Parser, ast}
 
 object RubyParserTester {
   def main(args: Array[String]): Unit = {
-    val codeString = "def foo(bar)\n bar\n end\n foo('astring')"
+    val source = scala.io.Source.fromFile("example-apis/AverageAgeMultiset.rb")
+    val lines = try source.mkString finally source.close()
 
-    val node = parseContents(codeString)
+    val node = parseContents(lines)
     println(node)
   }
 
   def parseContents(string: String): Node = {
     val rubyParser = new Parser()
     val in = new StringReader(string)
-    val version = CompatVersion.RUBY1_8
+    val version = CompatVersion.RUBY2_0
     val config = new ParserConfiguration(0, version)
     rubyParser.parse("<code>", in, config)
   }
