@@ -28,6 +28,10 @@ sealed abstract class Expression {
     case (_, _) => Product.addFactor(Set(this), other)
   }
 
+  def -(other: Expression): Expression = this + other * Number(-1)
+
+  def /(other: Expression): Expression = this * other ** Number(-1)
+
   def **(exponent: Expression): Expression = (this, exponent) match {
     case (_, Number(0)) => Number(1)
     case (Number(0), _) => Number(0)
@@ -48,9 +52,11 @@ sealed abstract class Expression {
       this.substitute(values) == other.substitute(values)
     }
   }
+
+//  def solve(name: Name, otherSide: Expression): Option[List[Expression]]
 }
 
-case class Sum(summands: Set[Expression]) extends Expression {
+case class Sum private (summands: Set[Expression]) extends Expression {
   assert(summands.size > 1, s"summands are $summands")
   assert(summands.count(_.isInstanceOf[Number]) <= 1, s"summands are $summands")
   assert(summands.find(_ == Number(0)) == None, s"summands are $summands")
@@ -60,6 +66,15 @@ case class Sum(summands: Set[Expression]) extends Expression {
   def substitute(map: Map[Name, Expression]) = {
     summands.toList.map(_.substitute(map)).reduce((x: Expression, y:Expression) => x + y)
   }
+
+//  def solve(name: Name, otherSide: Expression) = {
+//    val (doesNotContainName, containsName) = summands.partition(_.variables.contains(name))
+//
+//    containsName.size match {
+//      case 0 =>
+//
+//    }
+//  }
 }
 
 object Sum {
@@ -91,7 +106,7 @@ object Sum {
     }
   }
 
-  def buildFromValidSummandsSet(summands: Set[Expression]): Expression = {
+  private def buildFromValidSummandsSet(summands: Set[Expression]): Expression = {
     summands.size match {
       case 0 => Number(0)
       case 1 => summands.head
@@ -100,7 +115,7 @@ object Sum {
   }
 }
 
-case class Product(terms: Set[Expression]) extends Expression {
+case class Product private (terms: Set[Expression]) extends Expression {
   assert(terms.size > 1, s"terms are $terms")
   assert(terms.count(_.isInstanceOf[Number]) <= 1, s"terms are $terms")
 
