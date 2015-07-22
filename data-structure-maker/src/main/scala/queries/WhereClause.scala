@@ -1,13 +1,13 @@
 package queries
 
-import cas.Expression
+import cas.MathExp
 
 sealed abstract class WhereClause
 
-case class ConstantWhereClause(nodeFunction: Expression)
+case class ConstantWhereClause(nodeFunction: MathExp[FML])
 
-case class ParameterEqualityWhereClause(parameterFunction: Expression, nodeFunction: Expression)
+case class ParameterEqualityWhereClause(parameterFunction: MathExp[FML], nodeFunction: MathExp[FML])
 
-case class ParameterGreaterThanWhereClause(parameterFunction: Expression,
-                                           nodeFunction: Expression,
+case class ParameterGreaterThanWhereClause(parameterFunction: MathExp[FML],
+                                           nodeFunction: MathExp[FML],
                                            IncludesEqual: Boolean)

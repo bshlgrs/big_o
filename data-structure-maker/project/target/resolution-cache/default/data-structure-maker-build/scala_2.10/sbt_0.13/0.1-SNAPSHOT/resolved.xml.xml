@@ -4,7 +4,7 @@
 		module="data-structure-maker-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20150718000108"
+		publication="20150721210426"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

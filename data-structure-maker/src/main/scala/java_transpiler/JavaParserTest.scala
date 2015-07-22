@@ -6,11 +6,12 @@ import scala.collection.JavaConverters._
 
 import japa.parser.ast.CompilationUnit
 
-object JavaParserTester {
+object JavaParserTest {
   def main(args: Array[String]) {
     val node = parseJavaFile("")
-
-    println(RubyOutputter.output(node))
+    val classAsts = AstBuilder.build(node)
+    println(classAsts)
+    println(classAsts.map(RubyOutputter.outputClass).mkString("\n\n"))
   }
 
   def parseJavaFile(filename: String): CompilationUnit = {
@@ -23,14 +24,18 @@ object JavaParserTester {
 
   val javaString =
     """
-       class Counter {
-         int x = 0;
-         void increase(int y) {
-           this.x += y;
-         }
-         int get() {
-           return this.x;
-         }
-       }
-    """
+       |class Counter {
+       |  public Counter(int start) {
+       |    this.x = start;
+       |    new Counter();
+       |  }
+       | 
+       |  void increase(int y) {
+       |    this.x += y;
+       |  }
+       |  int get() {
+       |    return this.x;
+       |  }
+       |}
+    """.stripMargin('|')
 }

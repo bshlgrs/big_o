@@ -1,10 +1,10 @@
 package queries
 
-import cas.Expression
+import cas.MathExp
 
 class OrderByClause {
 
 }
 
-case class GoodOrderByClause(nodeExpr: Expression) extends OrderByClause
-case class BadOrderByClause(expr: Expression) extends OrderByClause
+case class GoodOrderByClause(nodeExpr: MathExp[FML]) extends OrderByClause
+case class BadOrderByClause(expr: MathExp[FML]) extends OrderByClause

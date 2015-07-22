@@ -1,15 +1,11 @@
-package ruby_to_queries
+package ruby_to_ast
 
 import java.io.StringReader
 
 import org.jruby.CompatVersion
 import org.jruby.ast.Node
 import org.jruby.Ruby
-import org.jruby.runtime.scope.NoVarsDynamicScope
 
-//import org.jrubyparser.ast.Node
-//import org.jrubyparser.parser.ParserConfiguration
-//import org.jrubyparser.{CompatVersion, Parser}
 import org.jruby.parser.{ParserConfiguration, Parser}
 
 object RubyParserTester {
@@ -27,9 +23,9 @@ object RubyParserTester {
     val in = string.toCharArray.map(_.toByte)
     val version = CompatVersion.BOTH
     val config = new ParserConfiguration(Ruby.newInstance(), 0, false, version)
-    
+
     // sorry James for the null. I didn't make the api, I just use it...
-    rubyParser.parse("fuck", in, null, config)
+    rubyParser.parse("fuck.rb", in, null, config)
   }
 //  def parseContents(string: String) = {
 //    ???

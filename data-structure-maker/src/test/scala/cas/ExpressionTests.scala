@@ -8,22 +8,28 @@ import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.scalacheck.Prop.forAll
 
 object ExpressionGenerators {
-  lazy val genExpression: Gen[Expression] = for {
-    result <- Gen.oneOf(genVariable, genConstant, genSum)
+  lazy val genExpression: Gen[MathExp[Name]] = for {
+    result <- Gen.oneOf(genVariable, genConstant, genSum, genProduct)
   } yield result
 
-  lazy val genVariable: Gen[VariableExpression] = {
-    Gen.oneOf("x", "y", "z").map((name: String) => VariableExpression(Name(name)))
+  lazy val genVariable: Gen[VariableMathExp[Name]] = {
+    Gen.oneOf("x", "y", "z").map((name: String) => VariableMathExp(Name(name)))
   }
 
-  lazy val genSum: Gen[Expression] = for {
+  lazy val genSum: Gen[MathExp[Name]] = for {
     x <- genVariable
     y <- genExpression
   } yield x + y
 
-  lazy val genConstant = Gen.oneOf(Number(0), Number(1), Number(2))
+  lazy val genProduct: Gen[MathExp[Name]] = for {
+    x <- genSum
+    y <- Gen.oneOf(genProduct, genVariable)
+    z <- Gen.listOf(genVariable)
+  } yield (List(x, y) ++ z).reduce(_ * _)
 
-  implicit lazy val arbExpression: Arbitrary[Expression] = Arbitrary(genExpression)
+  lazy val genConstant: Gen[MathExp[Name]] = Gen.oneOf(Number(0), Number(1), Number(2)).map(_.asInstanceOf[MathExp[Name]])
+
+  implicit lazy val arbExpression: Arbitrary[MathExp[Name]] = Arbitrary(genExpression)
 }
 
 class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
@@ -31,8 +37,10 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
 
   implicit lazy val arbInteger: Arbitrary[Int] = Arbitrary(Gen.chooseNum(-10, 10))
 
+  type Exp = MathExp[Name]
+
   property("Expression generator isn't buggy") {
-    forAll { (exp: Expression) =>
+    forAll { (exp: Exp) =>
       exp must be(exp)
     }
   }
@@ -44,37 +52,37 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
   }
 
   property("Addition isn't buggy") {
-    forAll { (lhs:Expression, rhs: Expression) =>
+    forAll { (lhs:Exp, rhs: Exp) =>
       (lhs + rhs) must be(lhs + rhs)
     }
   }
 
   property("Addition is commutative") {
-    forAll { (lhs:Expression, rhs: Expression) =>
+    forAll { (lhs:Exp, rhs: Exp) =>
       (lhs + rhs) must be(rhs + lhs)
     }
   }
 
   property("Addition is commutative according to monte carlo") {
-    forAll { (lhs:Expression, rhs: Expression) =>
+    forAll { (lhs:Exp, rhs: Exp) =>
       (lhs + rhs).monteCarloEquals(rhs + lhs) must be(true)
     }
   }
 
   property("Addition is associative") {
-    forAll { (a: Expression, b: Expression, c: Expression) =>
+    forAll { (a: Exp, b: Exp, c: Exp) =>
       ((a + b) + c).simplify must be(a + (b + c))
     }
   }
 
   property("Addition is associative according to monte carlo") {
-    forAll { (a:Expression, b: Expression, c: Expression) =>
+    forAll { (a:Exp, b: Exp, c: Exp) =>
       ((a + b) + c).monteCarloEquals(a + (b + c)) must be(true)
     }
   }
 
   property("Simplification only needs to be done once") {
-    forAll { (exp:Expression) =>
+    forAll { (exp:Exp) =>
       exp.simplify must be(exp.simplify.simplify)
     }
   }
@@ -86,25 +94,25 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
   }
 
   property("Multiplication works on expressions") {
-    forAll { (lhs: Expression, rhs: Expression) =>
+    forAll { (lhs: Exp, rhs: Exp) =>
       lhs * rhs must be(lhs * rhs)
     }
   }
 
   property("Multiplication is commutative") {
-    forAll { (lhs:Expression, rhs: Expression) =>
+    forAll { (lhs:Exp, rhs: Exp) =>
       (lhs * rhs) must be(rhs * lhs)
     }
   }
 
   property("Multiplication is associative") {
-    forAll { (a: Expression, b: Expression, c: Expression) =>
+    forAll { (a: Exp, b: Exp, c: Exp) =>
       ((a * b) * c).simplify must be(a * (b * c))
     }
   }
 
   property("Monte Carlo equals isn't obviously broken") {
-    forAll { (a: Expression, b: Expression) =>
+    forAll { (a: Exp, b: Exp) =>
       a.monteCarloEquals(a + b) must be(b.monteCarloEquals(Number(0)))
     }
   }
