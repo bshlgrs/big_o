@@ -1,10 +1,22 @@
 package java_transpiler
 
 import cas.Name
+import com.github.javaparser.ast.body.VariableDeclarator
+import com.github.javaparser.ast.expr._
 import com.github.javaparser.ast.stmt._
 import scala.collection.JavaConverters._
+import scala.util.Try
 
-sealed abstract class JavaStatement
+sealed abstract class JavaStatement {
+  def descendantStatements: List[JavaStatement] = this match {
+    case _: VariableDeclarationStatement => List(this)
+    case _: ReturnStatement => List(this)
+    case _: ReturnStatement => ???
+  }
+  def descendantExpressions: List[JavaExpression] = this match {
+    case _ => ???
+  }
+}
 
 case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpression]) extends JavaStatement
 case class ReturnStatement(value: JavaExpression) extends JavaStatement
@@ -18,7 +30,17 @@ object JavaStatement {
   }
 
   def buildStatement(stmt: Statement): JavaStatement = stmt match {
-    case s: ExpressionStmt => ExpressionStatement(JavaExpression.build(s.getExpression))
+    case s: ExpressionStmt => {
+      s.getExpression match {
+        case e: VariableDeclarationExpr =>
+          val name = e.getVars.get(0).getId.getName
+          val javaType = JavaType.build(e.getType)
+
+          val body = Try(e.getChildrenNodes.get(1).asInstanceOf[VariableDeclarator].getInit).toOption
+          VariableDeclarationStatement(name, javaType, body.map(JavaExpression.build))
+        case e: Expression => ExpressionStatement(JavaExpression.build(e))
+      }
+    }
     case s: ReturnStmt => ReturnStatement(JavaExpression.build(s.getExpr))
     case _ =>
       println(s"$stmt : ${stmt.getClass} not implemented, fuckin do it man")

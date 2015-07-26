@@ -70,8 +70,9 @@ object ParserOfApi {
         |
       """.stripMargin)
 
-    println(AstBuilder.build(cu));
+    println(AstBuilder.build(cu))
 
+    println(AstBuilder.build(cu).map(RubyOutputter.outputClass).mkString("\n\n"))
   }
 
 }

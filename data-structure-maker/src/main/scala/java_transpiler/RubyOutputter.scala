@@ -50,6 +50,12 @@ object RubyOutputter {
       case true => outputExpression(exp)
       case false => s"return ${outputExpression(exp)}"
     }
+    case VariableDeclarationStatement(name, _, initialValue) => initialValue match {
+      case Some(value) => "name = " + outputExpression(value)
+      case None => ""
+    }
+    case _ =>
+      throw new RuntimeException(s"ruby needs to have a output for ${stmt.getClass}")
   }
 
   def outputExpression(exp: JavaExpression): String = exp match {
@@ -65,11 +71,25 @@ object RubyOutputter {
               s"@$name = ${outputExpression(expr)}"
           }
       }
+    case JavaLambdaExpr(args, body) => args match {
+      case Nil => throw new RuntimeException("Hey, I don't allow side effects in lambdas right now, so this is bad")
+      case _ => s"{ |${args.map(_._1).mkString(", ")}| ${outputExpression(body)} }"
+    }
     case JavaThis => "self"
-    case JavaFieldAccess(JavaThis, field) => s"@$field"
     case JavaVariable(name) => name
     case exp@JavaBinaryOperation(op, lhs, rhs) => s"(${outputExpression(lhs)} ${exp.opString} ${outputExpression(rhs)})"
     case JavaNewObject(className, args) => s"$className.new${mbBracket(args.map(outputExpression))}"
+    case JavaArrayInitializerExpr(items) => "[" + items.map(outputExpression).mkString(", ") + "]"
+    case JavaStringLiteral(x) => "\"" + x + "\""
+    case JavaBoolLit(x) => x.toString
+    case JavaFieldAccess(JavaThis, field) => s"@$field"
+    case JavaFieldAccess(scope, field) => outputExpression(scope) + "." + field
+    case JavaMethodCall(scope, field, args) => outputExpression(scope) + "." + field + mbBracket(args.map(outputExpression))
+//    case JavaVariableDeclarationExpression(name, _, local, expr) =>
+//      outputExpression(JavaAssignmentExpression(name, local, expr))
+    case _ =>
+      println(s"you need to implement ${exp.getClass}")
+      ???
   }
 
   def mbBracket(blah: List[String]) = {
