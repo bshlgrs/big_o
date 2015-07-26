@@ -1,7 +1,7 @@
 package java_transpiler
 
 import cas.{Number, MathExp}
-import japa.parser.ast.expr._
+import com.github.javaparser.ast.expr._
 import scala.collection.JavaConverters._
 
 sealed abstract class JavaExpression
@@ -11,8 +11,8 @@ case class JavaBinaryOperation(op: BinaryExpr.Operator, lhs: JavaExpression, rhs
     case BinaryExpr.Operator.plus => "+"
     case BinaryExpr.Operator.times => "*"
   }
-
 }
+
 case class JavaIntLit(item: Int) extends JavaExpression
 case class JavaMethodCall(callee: JavaExpression, methodName: String, args: List[JavaExpression]) extends JavaExpression
 case class JavaFieldAccess(thing: JavaExpression, field: String) extends JavaExpression
@@ -20,8 +20,11 @@ case class JavaNewObject(className: String, args: List[JavaExpression]) extends 
 case object JavaThis extends JavaExpression
 case class JavaVariable(name: String) extends JavaExpression
 case class JavaIfExpression(cond: JavaExpression, ifTrue: JavaExpression, ifFalse: JavaExpression) extends JavaExpression
+// maybe the next line is a massive mistake :/
+case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpression) extends JavaExpression
 case object JavaUnit extends JavaExpression
 case class JavaAssignmentExpression(name: String, local: Boolean, expression: JavaExpression) extends JavaExpression
+case class JavaArrayInitializerExpr(items: List[JavaExpression]) extends JavaExpression
 
 object JavaExpression {
   def build(exp: Expression): JavaExpression = exp match {
@@ -60,6 +63,11 @@ object JavaExpression {
       val args = javaArgs.getOrElse(List())
       val name = exp.getType.toString
       JavaNewObject(name, args.map(build))
+    case exp: LambdaExpr =>
+//      JavaLambdaExpr(exp.getParameters.asScala.map(_.))
+      ???
+    case exp: ArrayInitializerExpr =>
+      JavaArrayInitializerExpr(Option(exp.getValues).map(_.asScala.map(build)).getOrElse(Nil).toList)
     case _ =>
       println(s"$exp : ${exp.getClass} not implemented, fuckin do it man")
       ???

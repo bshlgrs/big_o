@@ -1,7 +1,7 @@
 package java_transpiler
 
 import cas.Name
-import japa.parser.ast.stmt.{ReturnStmt, ExpressionStmt, Statement, BlockStmt}
+import com.github.javaparser.ast.stmt._
 import scala.collection.JavaConverters._
 
 sealed abstract class JavaStatement

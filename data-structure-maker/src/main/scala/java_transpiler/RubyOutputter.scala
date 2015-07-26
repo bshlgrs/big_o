@@ -1,18 +1,30 @@
 package java_transpiler
 
+import java.io.{PrintWriter, File}
+
 object RubyOutputter {
+  def outputClassToFile(javaClass: JavaClass) = {
+    val writer = new PrintWriter(new File(s"target/ruby/${javaClass.name}.rb" ))
+
+    writer.write(outputClass(javaClass))
+    writer.close()
+  }
+
   def outputClass(javaClass: JavaClass): String = {
     val initializationStmts = javaClass.fields.collect({
       case x if x.initialValue.isDefined => ExpressionStatement(
         JavaAssignmentExpression(x.name, false, x.initialValue.get))
     })
 
-    val initializationMethod = JavaMethodDeclaration(
-      "initialize",
-      javaClass.constructor.map(_.args).getOrElse(Nil),
-      javaClass.constructor.map(_.body).getOrElse(Nil) ++ initializationStmts)
-
-    val initializationString = outputMethod(initializationMethod)
+    val initializationString = if (javaClass.constructor.isDefined || javaClass.fields.exists(_.initialValue.isDefined)) {
+      val initializationMethod = JavaMethodDeclaration(
+        "initialize",
+        javaClass.constructor.map(_.args).getOrElse(Nil),
+        javaClass.constructor.map(_.body).getOrElse(Nil) ++ initializationStmts)
+      outputMethod(initializationMethod)
+    }
+    else
+      ""
 
     val fields = javaClass.fields.map({ (x) =>
       s"  # ${x.name}: ${x.javaType.toScalaTypeString()} = ${x.initialValue}"
@@ -24,10 +36,7 @@ object RubyOutputter {
   }
 
   def outputMethod(decl: JavaMethodDeclaration): String = {
-    val args = if (decl.args.length == 0)
-      ""
-    else
-      "(" ++ decl.args.map(_._1).mkString(", ") ++ ")"
+    val args = mbBracket(decl.args.map(_._1))
 
     val body = decl.body.dropRight(1).map("    " + outputStatement(_, false) + "\n").mkString("")
     val lastStatementInBody = "    " + outputStatement(decl.body.last, true)

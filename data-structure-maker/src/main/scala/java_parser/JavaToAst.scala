@@ -1,10 +1,10 @@
-package java_transpiler
+package java_parser
 
-import japa.parser.JavaParser
 import java.io.StringBufferInputStream
-import scala.collection.JavaConverters._
+import java_transpiler.AstBuilder
 
-import japa.parser.ast.CompilationUnit
+import com.github.javaparser.JavaParser
+import com.github.javaparser.ast._
 
 object JavaToAst {
   def main(args: Array[String]) {

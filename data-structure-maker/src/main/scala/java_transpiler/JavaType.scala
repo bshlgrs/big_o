@@ -1,7 +1,9 @@
 package java_transpiler
 
-import japa.parser.ast.`type`.{ClassOrInterfaceType, PrimitiveType, Type}
+import com.github.javaparser.ast.`type`._
+
 import scala.collection.JavaConverters._
+import scala.util.Try
 
 sealed abstract class JavaType {
   def toScalaTypeString(): String
@@ -9,8 +11,16 @@ sealed abstract class JavaType {
 
 case object JavaIntType extends JavaType {
   lazy val toScalaTypeString = "Int"
-
 }
+
+case object JavaBoolType extends JavaType {
+  lazy val toScalaTypeString = "Boolean"
+}
+
+case class JavaArrayType(itemType: JavaType) extends JavaType {
+  lazy val toScalaTypeString = s"Array[${itemType.toScalaTypeString()}]"
+}
+
 case class JavaClassType(name: String, itemTypes: List[JavaType]) extends JavaType {
   lazy val toScalaTypeString = s"$name[${itemTypes.map(_.toScalaTypeString()).mkString(", ")}]"
 }
@@ -21,11 +31,19 @@ object JavaType {
       case x: PrimitiveType =>
         x.getType match {
           case PrimitiveType.Primitive.Int => JavaIntType
-          case _ => ???
+          case PrimitiveType.Primitive.Boolean => JavaBoolType
+          case _ =>
+            ???
         }
       case x: ClassOrInterfaceType =>
-        JavaClassType(x.getName, x.getTypeArgs.asScala.map(JavaType.build).toList)
+        val typeArgs = Try(x.getTypeArgs.asScala.map(JavaType.build).toList).recover({
+          case _: NullPointerException => Nil
+        }).get
+        JavaClassType(x.getName, typeArgs)
+      case x: ReferenceType =>
+        JavaArrayType(build(x.getType))
+      case _ =>
+        ???
     }
   }
-
 }

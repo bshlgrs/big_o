@@ -1,7 +1,7 @@
 package java_transpiler
 
 import cas._
-import japa.parser.ast.body.{ConstructorDeclaration, MethodDeclaration}
+import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
 
 case class JavaMethodDeclaration(name: String, args: List[(String, JavaType)], body: List[JavaStatement])

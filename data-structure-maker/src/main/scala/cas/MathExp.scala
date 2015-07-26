@@ -57,6 +57,10 @@ sealed abstract class MathExp[A] {
     }
   }
 
+  def applyBinaryOperator(op: CasBinaryOperator[A], other: MathExp[A]) = ??? // this match {
+
+//  }
+
 //  def solve(name: A, otherSide: Expression): Option[List[Expression]]
 }
 
@@ -103,12 +107,9 @@ object Sum {
             buildFromValidSummandsSet(otherItems)
           else {
             val thingToAdd: MathExp[A] = mbNewSummandExpression.map(_ * Number(newCoefficientValue))
-                                                                  .getOrElse(Number(newCoefficientValue))
+              .getOrElse(Number(newCoefficientValue))
             buildFromValidSummandsSet(otherItems ++ Set(thingToAdd))
-          }
-        }
-      }
-    }
+    }}}}
   }
 
   private def buildFromValidSummandsSet[A](summands: Set[MathExp[A]]): MathExp[A] = {
@@ -168,10 +169,7 @@ object Product {
           else {
             val termToAdd = base ** newExponent
             buildFromValidTermsSet(otherItems ++ Set(termToAdd))
-          }
-        }
-      }
-    }
+    }}}}
   }
 
   def buildFromValidTermsSet[A](terms: Set[MathExp[A]]): MathExp[A] = {
@@ -181,6 +179,19 @@ object Product {
       case _ => Product(terms)
     }
   }
+}
+
+abstract class BinaryOperatorApplication[A](op: CasBinaryOperator[A]) extends MathExp[A]
+// behavior depends on the rules.
+// if it's a set, you just put the new thing in.
+// if it's a list, you push it to
+
+case class SetApplication[A](op: CasBinaryOperator[A], set: Set[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
+//  assert(op.is(Commutative., Associative, Idempotent))
+
+  lazy val variables = set.flatMap(_.variables)
+
+  def substitute(map: Map[A, MathExp[A]]): MathExp[A] = SetApplication[A](op, set.map(_.substitute(map)))
 }
 
 case class Power[A](base: MathExp[A], exponent: MathExp[A]) extends MathExp[A] {

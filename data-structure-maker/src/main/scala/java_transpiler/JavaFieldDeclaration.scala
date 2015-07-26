@@ -1,6 +1,7 @@
 package java_transpiler
 
-import japa.parser.ast.body.{VariableDeclarator, FieldDeclaration}
+import com.github.javaparser.ast.body._
+
 
 case class JavaFieldDeclaration(name: String, javaType: JavaType, initialValue: Option[JavaExpression] = None)
 

@@ -1,7 +1,8 @@
 package java_transpiler
 
-import japa.parser.ast.CompilationUnit
-import japa.parser.ast.body.{ConstructorDeclaration, MethodDeclaration, FieldDeclaration, TypeDeclaration}
+import com.github.javaparser.ast.CompilationUnit
+import com.github.javaparser.ast.body.{ConstructorDeclaration, MethodDeclaration, FieldDeclaration, TypeDeclaration}
+
 import scala.collection.JavaConverters._
 
 object AstBuilder {

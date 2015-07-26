@@ -6,5 +6,5 @@ class OrderByClause {
 
 }
 
-case class GoodOrderByClause(nodeExpr: MathExp[FML]) extends OrderByClause
-case class BadOrderByClause(expr: MathExp[FML]) extends OrderByClause
+case class GoodOrderByClause(nodeExpr: MathExp[DataSource]) extends OrderByClause
+case class BadOrderByClause(expr: MathExp[DataSource]) extends OrderByClause
