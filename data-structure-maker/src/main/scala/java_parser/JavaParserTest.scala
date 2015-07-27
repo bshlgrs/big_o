@@ -70,9 +70,8 @@ object ParserOfApi {
         |
       """.stripMargin)
 
-    println(AstBuilder.build(cu))
-
-    println(AstBuilder.build(cu).map(RubyOutputter.outputClass).mkString("\n\n"))
+    val queueMethods = AstBuilder.build(cu).head.methods.filter(_.isSuperFuckingSimple())
+    queueMethods.foreach((x) => println(RubyOutputter.outputMethod(x)))
   }
 
 }

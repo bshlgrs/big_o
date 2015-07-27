@@ -1,10 +1,24 @@
 package java_transpiler
 
 import cas._
+import queries._
 import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
 
-case class JavaMethodDeclaration(name: String, args: List[(String, JavaType)], body: List[JavaStatement])
+case class JavaMethodDeclaration(name: String, args: List[(String, JavaType)], body: List[JavaStatement]) {
+  def isSuperFuckingSimple() = body match {
+    case List(ReturnStatement(_)) => true
+    case _ => false
+  }
+
+  def buildQuery(): Query = {
+    if (isSuperFuckingSimple()) {
+      ???
+    } else {
+      throw new RuntimeException("I can only do this with super fucking simple things :/")
+    }
+  }
+}
 
 case class JavaConstructorDeclaration(args: List[(String, JavaType)], body: List[JavaStatement])
 

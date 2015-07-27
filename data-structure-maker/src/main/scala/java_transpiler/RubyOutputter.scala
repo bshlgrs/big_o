@@ -44,18 +44,26 @@ object RubyOutputter {
     s"  def ${decl.name}$args\n$body$lastStatementInBody\n  end"
   }
 
-  def outputStatement(stmt: JavaStatement, isAtEnd: Boolean): String = stmt match {
-    case ExpressionStatement(exp) => outputExpression(exp)
-    case ReturnStatement(exp) => isAtEnd match {
-      case true => outputExpression(exp)
-      case false => s"return ${outputExpression(exp)}"
+  def outputStatement(stmt: JavaStatement, isAtEnd: Boolean): String = {
+    val code = stmt match {
+      case ExpressionStatement(exp) => outputExpression(exp)
+      case ReturnStatement(exp) => isAtEnd match {
+        case true => outputExpression(exp)
+        case false => s"return ${outputExpression(exp)}"
+      }
+      case VariableDeclarationStatement(name, _, initialValue) => initialValue match {
+        case Some(value) => "name = " + outputExpression(value)
+        case None => ""
+      }
+      case _ =>
+        throw new RuntimeException(s"ruby needs to have a output for ${stmt.getClass}")
     }
-    case VariableDeclarationStatement(name, _, initialValue) => initialValue match {
-      case Some(value) => "name = " + outputExpression(value)
-      case None => ""
+
+    (isAtEnd, stmt) match {
+      case (_, _: ReturnStatement) => code
+      case (false, _) => code
+      case (true, _) => code + "\nnil"
     }
-    case _ =>
-      throw new RuntimeException(s"ruby needs to have a output for ${stmt.getClass}")
   }
 
   def outputExpression(exp: JavaExpression): String = exp match {
