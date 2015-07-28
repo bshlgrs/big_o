@@ -11,18 +11,20 @@ sealed abstract class JavaStatement {
   def descendantStatements: List[JavaStatement] = this match {
     case _: VariableDeclarationStatement => List(this)
     case _: ReturnStatement => List(this)
-    case _: ReturnStatement => ???
+    case _: ExpressionStatement => List(this)
+    case IfStatement(cond, trueCase, falseCase) => trueCase ++ falseCase
+    case WhileStatement(cond, action) => action
   }
-  def descendantExpressions: List[JavaExpression] = this match {
+  def descendantExpressions: List[JavaExpressionOrQuery] = this match {
     case _ => ???
   }
 }
 
-case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpression]) extends JavaStatement
-case class ReturnStatement(value: JavaExpression) extends JavaStatement
-case class ExpressionStatement(value: JavaExpression) extends JavaStatement
-case class IfStatement(cond: JavaExpression, trueCase: List[JavaStatement], falseCase: List[JavaStatement]) extends JavaStatement
-case class WhileStatement(cond: JavaExpression, action: List[JavaStatement]) extends JavaStatement
+case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery]) extends JavaStatement
+case class ReturnStatement(value: JavaExpressionOrQuery) extends JavaStatement
+case class ExpressionStatement(value: JavaExpressionOrQuery) extends JavaStatement
+case class IfStatement(cond: JavaExpressionOrQuery, trueCase: List[JavaStatement], falseCase: List[JavaStatement]) extends JavaStatement
+case class WhileStatement(cond: JavaExpressionOrQuery, action: List[JavaStatement]) extends JavaStatement
 
 object JavaStatement {
   def buildBlock(blk: BlockStmt): List[JavaStatement] = {

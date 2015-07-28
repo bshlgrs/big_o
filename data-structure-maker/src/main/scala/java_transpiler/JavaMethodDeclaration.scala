@@ -1,7 +1,7 @@
 package java_transpiler
 
 import cas._
-import queries._
+import java_transpiler.queries._
 import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
 

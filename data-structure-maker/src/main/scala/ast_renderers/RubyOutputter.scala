@@ -1,6 +1,7 @@
-package java_transpiler
+package ast_renderers
 
-import java.io.{PrintWriter, File}
+import java.io.{File, PrintWriter}
+import java_transpiler._
 
 object RubyOutputter {
   def outputClassToFile(javaClass: JavaClass) = {
@@ -66,7 +67,7 @@ object RubyOutputter {
     }
   }
 
-  def outputExpression(exp: JavaExpression): String = exp match {
+  def outputExpression(exp: JavaExpressionOrQuery): String = exp match {
     case JavaIntLit(n) => n.toString
     case JavaAssignmentExpression(name, isLocal, expr) =>
       isLocal match {

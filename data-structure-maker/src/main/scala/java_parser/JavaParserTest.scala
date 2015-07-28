@@ -1,8 +1,9 @@
 package java_parser
 
 import java.io.StringBufferInputStream
-import java_transpiler.{AstBuilder, RubyOutputter}
+import java_transpiler.AstBuilder
 
+import ast_renderers.RubyOutputter
 import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.CompilationUnit
 

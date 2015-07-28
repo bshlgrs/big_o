@@ -2,7 +2,6 @@ package cas
 
 import scala.util.Random
 
-
 sealed abstract class MathExp[A] {
   type NameExpression = MathExp[Name]
 
@@ -181,18 +180,76 @@ object Product {
   }
 }
 
-abstract class BinaryOperatorApplication[A](op: CasBinaryOperator[A]) extends MathExp[A]
-// behavior depends on the rules.
-// if it's a set, you just put the new thing in.
-// if it's a list, you push it to
+abstract class BinaryOperatorApplication[A](op: CasBinaryOperator[A]) extends MathExp[A] {
+  def combineWithCollection(other: this.type): MathExp[A]
+  def leftCombineWithItem(other: MathExp[A]): MathExp[A]
+  def rightCombineWithItem(other: MathExp[A]): MathExp[A]
+  def perhapsDeflate(): MathExp[A]
+}
 
 case class SetApplication[A](op: CasBinaryOperator[A], set: Set[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
-//  assert(op.is(Commutative., Associative, Idempotent))
+  assert(op.is(Commutative, Associative, Idempotent))
 
   lazy val variables = set.flatMap(_.variables)
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = SetApplication[A](op, set.map(_.substitute(map)))
+
+  def combineWithCollection(other: this.type): MathExp[A] = {
+    assert(this.op == other.op)
+    SetApplication(op, set ++ other.set).asInstanceOf[MathExp[A]]
+  }
+
+  def leftCombineWithItem(item: MathExp[A]) = {
+    SetApplication(op, set + item).perhapsDeflate()
+  }
+
+  def rightCombineWithItem(item: MathExp[A]) = leftCombineWithItem(item)
+
+  def perhapsDeflate() = this.set.size match {
+    case 0 => ???
+    case 1 => this.set.toList.head
+    case _ => this
+  }
 }
+
+case class ListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
+  lazy val variables = list.flatMap(_.variables)
+
+  def substitute(map: Map[A, MathExp[A]]): MathExp[A] = ListApplication[A](op, list.map(_.substitute(map)))
+
+  def combineWithCollection(other: this.type): MathExp[A] = {
+    assert(this.op == other.op)
+    ListApplication(op, list ++ other.list).asInstanceOf[MathExp[A]]
+  }
+
+  def leftCombineWithItem(item: MathExp[A]) = {
+    ListApplication(op, list :+ item).perhapsDeflate()
+  }
+
+  def rightCombineWithItem(item: MathExp[A]) = leftCombineWithItem(item)
+
+  def perhapsDeflate() = this.list.size match {
+    case 0 => ???
+    case 1 => this.list.head
+    case _ => this
+  }
+}
+
+case class BinaryTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], rhs: MathExp[A]) extends BinaryOperatorApplication[A](op) {
+  lazy val variables = lhs.variables ++ rhs.variables
+
+  def substitute(map: Map[A, MathExp[A]]) = op.apply(lhs.substitute(map), rhs.substitute(map))
+
+  def combineWithCollection(other: this.type) = {
+    assert(this.op == other.op)
+    BinaryTreeApplication(op, this, other)
+  }
+
+  def leftCombineWithItem(item: MathExp[A]) = BinaryTreeApplication(op, this, item)
+  def rightCombineWithItem(item: MathExp[A]) = BinaryTreeApplication(op, item, this)
+  def perhapsDeflate() = this
+}
+
 
 case class Power[A](base: MathExp[A], exponent: MathExp[A]) extends MathExp[A] {
   val variables = base.variables ++ exponent.variables
@@ -228,20 +285,6 @@ class DummyVariableMathExp[A] extends MathExp[A] {
   val variables = Set[A]()
 
   def substitute(map: Map[A, MathExp[A]]) = this
-}
-
-object Tester {
-  implicit def intToNumber(value: Int): Number[Name] = Number(value)
-  implicit def stringToName(name: String): Name = Name(name)
-  implicit def nameToVariableExpression(name: Name): VariableMathExp[Name] = VariableMathExp(name)
-
-  def main (args: Array[String]) {
-    val x = VariableMathExp(Name("x"))
-    val y = VariableMathExp(Name("y"))
-
-    val expr = y * y * 2 * 2
-    println(expr)
-  }
 }
 
 object ExpressionHelper {

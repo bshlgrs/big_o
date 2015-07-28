@@ -1,43 +1,38 @@
 package java_transpiler
 
-import cas.{Number, MathExp}
 import com.github.javaparser.ast.expr._
 import com.github.javaparser.ast.stmt.ExpressionStmt
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-sealed abstract class JavaExpression {
-  def descendantExpressions: List[JavaExpression] = ???
-}
-
-case class JavaBinaryOperation(op: BinaryExpr.Operator, lhs: JavaExpression, rhs: JavaExpression) extends JavaExpression {
+case class JavaBinaryOperation(op: BinaryExpr.Operator, lhs: JavaExpressionOrQuery, rhs: JavaExpressionOrQuery) extends JavaExpressionOrQuery {
   lazy val opString = op match {
     case BinaryExpr.Operator.plus => "+"
     case BinaryExpr.Operator.times => "*"
   }
 }
 
+sealed abstract class JavaExpression extends JavaExpressionOrQuery
+
 case class JavaIntLit(item: Int) extends JavaExpression
 case class JavaBoolLit(boolean: Boolean) extends JavaExpression
-case class JavaMethodCall(callee: JavaExpression, methodName: String, args: List[JavaExpression]) extends JavaExpression
-case class JavaFieldAccess(thing: JavaExpression, field: String) extends JavaExpression
-case class JavaNewObject(className: String, args: List[JavaExpression]) extends JavaExpression
+case class JavaMethodCall(callee: JavaExpressionOrQuery, methodName: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
+case class JavaFieldAccess(thing: JavaExpressionOrQuery, field: String) extends JavaExpression
+case class JavaNewObject(className: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
 case object JavaThis extends JavaExpression
 case class JavaVariable(name: String) extends JavaExpression
-case class JavaIfExpression(cond: JavaExpression, ifTrue: JavaExpression, ifFalse: JavaExpression) extends JavaExpression
+case class JavaIfExpression(cond: JavaExpressionOrQuery, ifTrue: JavaExpressionOrQuery, ifFalse: JavaExpressionOrQuery) extends JavaExpression
 // maybe the next line is a massive mistake :/
-case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpression) extends JavaExpression
+case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpressionOrQuery) extends JavaExpression
 case object JavaUnit extends JavaExpression
-//case class JavaVariableDeclarationExpression(name: String,
-//                                             javaType: JavaType,
-//                                             local: Boolean,
-//                                             expression: JavaExpression) extends JavaExpression
-case class JavaAssignmentExpression(name: String, local: Boolean, expression: JavaExpression) extends JavaExpression
-case class JavaArrayInitializerExpr(items: List[JavaExpression]) extends JavaExpression
+case class JavaAssignmentExpression(name: String, local: Boolean, expression: JavaExpressionOrQuery) extends JavaExpression
+case class JavaArrayInitializerExpr(items: List[JavaExpressionOrQuery]) extends JavaExpression
 case class JavaStringLiteral(string: String) extends JavaExpression
 
+// OH SHIT OH SHIT OH SHIT I BET THAT I WILL REGRET THIS LATER
+
 object JavaExpression {
-  def build(exp: Expression): JavaExpression = exp match {
+  def build(exp: Expression): JavaExpressionOrQuery = exp match {
     case null => throw new NullPointerException
     case exp: IntegerLiteralExpr =>
       JavaIntLit(exp.getValue.toInt)
@@ -62,8 +57,8 @@ object JavaExpression {
       JavaAssignmentExpression(lhs, isLocal, outExp)
     case exp: BinaryExpr =>
       JavaBinaryOperation(exp.getOperator, build(exp.getLeft), build(exp.getRight))
-//    case exp: MethodCallExpr =>
-//      ???
+    //    case exp: MethodCallExpr =>
+    //      ???
     case exp: NameExpr => JavaVariable(exp.getName)
     case exp: FieldAccessExpr => JavaFieldAccess(build(exp.getScope), exp.getField)
     case exp: ThisExpr => JavaThis

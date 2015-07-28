@@ -3,7 +3,7 @@ package java_transpiler
 import com.github.javaparser.ast.body._
 
 
-case class JavaFieldDeclaration(name: String, javaType: JavaType, initialValue: Option[JavaExpression] = None)
+case class JavaFieldDeclaration(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery] = None)
 
 object JavaFieldDeclaration {
   def build(fieldDeclaration: FieldDeclaration): JavaFieldDeclaration = {
