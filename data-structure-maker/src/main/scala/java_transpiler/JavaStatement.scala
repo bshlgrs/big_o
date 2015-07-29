@@ -15,9 +15,15 @@ sealed abstract class JavaStatement {
     case IfStatement(cond, trueCase, falseCase) => trueCase ++ falseCase
     case WhileStatement(cond, action) => action
   }
-  def descendantExpressions: List[JavaExpressionOrQuery] = this match {
-    case _ => ???
+  def directDescendantExpressions: List[JavaExpressionOrQuery] = this match {
+    case s: VariableDeclarationStatement => s.initialValue.toList
+    case s: ReturnStatement => List(s.value)
+    case s: ExpressionStatement => List(s.value)
+    case s: IfStatement => List(s.cond)
+    case s: WhileStatement => List(s.cond)
   }
+
+  def descendantExpressions: List[JavaExpressionOrQuery] = descendantStatements.flatMap(_.directDescendantExpressions)
 }
 
 case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery]) extends JavaStatement
@@ -55,7 +61,7 @@ object JavaStatement {
       IfStatement(cond, thenCase, elseCase)
     case s: ReturnStmt => ReturnStatement(JavaExpression.build(s.getExpr))
     case _ =>
-      println(s"$stmt : ${stmt.getClass} not implemented, fuckin do it man")
+      println(s"$stmt : ${stmt.getClass} not implemented, you should do it")
       ???
   }
 }

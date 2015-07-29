@@ -1,6 +1,6 @@
 package big_o
 
-import java_transpiler.{JavaVariable, JavaMethodCall, JavaExpression}
+import java_transpiler.{JavaExpressionOrQuery, JavaVariable, JavaMethodCall, JavaExpression}
 
 import com.github.javaparser.ast.expr.MethodCallExpr
 
@@ -46,7 +46,7 @@ case class BigO(powerOfN: Int, sqrtOfN: Boolean, powerOfLogN: Int) {
 }
 
 object BigO {
-  def fromJavaExpression(time: JavaExpression): BigO = time match {
+  def fromJavaExpression(time: JavaExpressionOrQuery): BigO = time match {
     case JavaMethodCall(JavaVariable(name), "time", Nil) => name match {
       case "Constant" => Constant
       case "Linear" => Linear

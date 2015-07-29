@@ -13,16 +13,16 @@ class GenericDataStructureForMultiset(insertion: Option[MutatingMethodImplementa
 
 object GenericDataStructureForMultiset {
   def build(javaClass: JavaClass): GenericDataStructureForMultiset = {
-    val insertion = javaClass.getField("timeForInsert").map { (time) =>
-      val time = BigO.fromJavaExpression(time)
+    val insertion = javaClass.getField("timeForInsert").flatMap(_.initialValue).map { (javaTime) =>
+      val time = BigO.fromJavaExpression(javaTime)
       val beforeInsert = javaClass.getMethod("beforeInsert").map(_.body).getOrElse(Nil)
       val afterInsert = javaClass.getMethod("afterInsert").map(_.body).getOrElse(Nil)
 
       MutatingMethodImplementation(time, beforeInsert, afterInsert)
     }
 
-    val removal = javaClass.getField("timeForRemove").map { (time) =>
-      val time = BigO.fromJavaExpression(time)
+    val removal = javaClass.getField("timeForRemove").flatMap(_.initialValue).map { (javaTime) =>
+      val time = BigO.fromJavaExpression(javaTime)
       val beforeInsert = javaClass.getMethod("beforeRemove").map(_.body).getOrElse(Nil)
       val afterInsert = javaClass.getMethod("afterRemove").map(_.body).getOrElse(Nil)
 

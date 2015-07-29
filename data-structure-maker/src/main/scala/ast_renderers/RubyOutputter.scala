@@ -3,6 +3,8 @@ package ast_renderers
 import java.io.{File, PrintWriter}
 import java_transpiler._
 
+import external_interfaces.ExternalInterfaces
+
 object RubyOutputter {
   def outputClassToFile(javaClass: JavaClass) = {
     val writer = new PrintWriter(new File(s"target/ruby/${javaClass.name}.rb" ))
@@ -33,7 +35,9 @@ object RubyOutputter {
 
     val methodsString = javaClass.methods.map(outputMethod).mkString("\n\n")
 
-    s"class ${javaClass.name}\n$initializationString\n$methodsString\nend"
+    val badlyFormattedVersion = s"class ${javaClass.name}\n$initializationString\n$methodsString\nend"
+
+    ExternalInterfaces.rubocopify(badlyFormattedVersion)
   }
 
   def outputMethod(decl: JavaMethodDeclaration): String = {
