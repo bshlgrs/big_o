@@ -28,7 +28,12 @@ case class WhileStatement(cond: JavaExpressionOrQuery, action: List[JavaStatemen
 
 object JavaStatement {
   def buildBlock(blk: BlockStmt): List[JavaStatement] = {
-    blk.getStmts.asScala.map(buildStatement).toList
+    Option(blk.getStmts).map(_.asScala.toList).getOrElse(Nil).map(buildStatement)
+  }
+
+  def buildPotentiallyBlock(stmt: Statement): List[JavaStatement] = stmt match {
+    case blk: BlockStmt => buildBlock(blk)
+    case _ => List(buildStatement(stmt))
   }
 
   def buildStatement(stmt: Statement): JavaStatement = stmt match {
@@ -43,6 +48,11 @@ object JavaStatement {
         case e: Expression => ExpressionStatement(JavaExpression.build(e))
       }
     }
+    case s: IfStmt =>
+      val cond = JavaExpression.build(s.getCondition)
+      val thenCase = JavaStatement.buildPotentiallyBlock(s.getThenStmt)
+      val elseCase = JavaStatement.buildPotentiallyBlock(s.getElseStmt)
+      IfStatement(cond, thenCase, elseCase)
     case s: ReturnStmt => ReturnStatement(JavaExpression.build(s.getExpr))
     case _ =>
       println(s"$stmt : ${stmt.getClass} not implemented, fuckin do it man")

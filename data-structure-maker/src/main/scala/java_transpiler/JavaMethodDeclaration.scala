@@ -26,6 +26,9 @@ object JavaMethodDeclaration {
   def build(methodDeclaration: MethodDeclaration) = {
     val name = methodDeclaration.getName
 
+    if (name == "initialize")
+      throw new RuntimeException("method name cannot be 'initialize' for Ruby compatibility reasons")
+
     val args = Option(methodDeclaration.getParameters).map(_.asScala.toList.map({ (x) =>
       (x.getId.getName, JavaType.build(x.getType))})).getOrElse(List())
 

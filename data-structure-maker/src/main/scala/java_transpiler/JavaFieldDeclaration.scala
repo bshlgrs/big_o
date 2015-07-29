@@ -13,7 +13,7 @@ object JavaFieldDeclaration {
     list.size match {
       case 2 => (list.get(0), list.get(1)) match {
         case (_type, dec: VariableDeclarator) =>
-          JavaFieldDeclaration(dec.getId.getName, javaType, Some(JavaExpression.build(dec.getInit)))
+          JavaFieldDeclaration(dec.getId.getName, javaType, Option(dec.getInit).map(JavaExpression.build))
         case _ => ???
       }
       case _ => ???

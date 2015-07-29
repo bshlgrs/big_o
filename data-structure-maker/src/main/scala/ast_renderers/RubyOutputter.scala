@@ -39,10 +39,9 @@ object RubyOutputter {
   def outputMethod(decl: JavaMethodDeclaration): String = {
     val args = mbBracket(decl.args.map(_._1))
 
-    val body = decl.body.dropRight(1).map("    " + outputStatement(_, false) + "\n").mkString("")
-    val lastStatementInBody = "    " + outputStatement(decl.body.last, true)
+    val body = outputBlock(decl.body, true)
 
-    s"  def ${decl.name}$args\n$body$lastStatementInBody\n  end"
+    s"  def ${decl.name}$args\n$body\n  end"
   }
 
   def outputStatement(stmt: JavaStatement, isAtEnd: Boolean): String = {
@@ -56,6 +55,8 @@ object RubyOutputter {
         case Some(value) => "name = " + outputExpression(value)
         case None => ""
       }
+      case IfStatement(cond, thenCase, elseCase) =>
+        s"if ${outputExpression(cond)}\n${outputBlock(thenCase, isAtEnd)}\nelse\n${outputBlock(elseCase, isAtEnd)}\nend"
       case _ =>
         throw new RuntimeException(s"ruby needs to have a output for ${stmt.getClass}")
     }
@@ -63,8 +64,14 @@ object RubyOutputter {
     (isAtEnd, stmt) match {
       case (_, _: ReturnStatement) => code
       case (false, _) => code
-      case (true, _) => code + "\nnil"
+      case (true, _) => code + "\nnil" // do I actually want this case?
     }
+  }
+
+  def outputBlock(stmts: List[JavaStatement], isAtEnd: Boolean): String = {
+    val body = stmts.dropRight(1).map("    " + outputStatement(_, false) + "\n").mkString("")
+    val lastStatementInBody = stmts.lastOption.map("    " + outputStatement(_, isAtEnd)).getOrElse("")
+    body + "\n" + lastStatementInBody
   }
 
   def outputExpression(exp: JavaExpressionOrQuery): String = exp match {
@@ -96,6 +103,7 @@ object RubyOutputter {
     case JavaMethodCall(scope, field, args) => outputExpression(scope) + "." + field + mbBracket(args.map(outputExpression))
 //    case JavaVariableDeclarationExpression(name, _, local, expr) =>
 //      outputExpression(JavaAssignmentExpression(name, local, expr))
+    case JavaNull => "nil"
     case _ =>
       println(s"you need to implement ${exp.getClass}")
       ???

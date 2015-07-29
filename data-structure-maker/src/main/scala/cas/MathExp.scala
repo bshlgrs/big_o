@@ -213,7 +213,7 @@ case class SetApplication[A](op: CasBinaryOperator[A], set: Set[MathExp[A]]) ext
 }
 
 case class ListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
-  lazy val variables = list.flatMap(_.variables)
+  lazy val variables = list.flatMap(_.variables).toSet
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = ListApplication[A](op, list.map(_.substitute(map)))
 

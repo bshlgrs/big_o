@@ -7,4 +7,14 @@ case class JavaClass(name: String,
   def allSuperFuckingSimpleMethodNames(): List[String] = {
     methods.filter(_.isSuperFuckingSimple()).map(_.name)
   }
+
+  def getMethod(name: String): Option[JavaMethodDeclaration] = {
+    methods.find(_.name == name)
+  }
+
+  def getField(name: String): Option[JavaFieldDeclaration] = {
+    fields.find(_.name == name)
+  }
 }
+
+

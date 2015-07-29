@@ -9,11 +9,14 @@ case class JavaBinaryOperation(op: BinaryExpr.Operator, lhs: JavaExpressionOrQue
   lazy val opString = op match {
     case BinaryExpr.Operator.plus => "+"
     case BinaryExpr.Operator.times => "*"
+    case BinaryExpr.Operator.equals => "=="
+    case BinaryExpr.Operator.greaterEquals => ">="
   }
 }
 
 sealed abstract class JavaExpression extends JavaExpressionOrQuery
 
+case object JavaNull extends JavaExpression
 case class JavaIntLit(item: Int) extends JavaExpression
 case class JavaBoolLit(boolean: Boolean) extends JavaExpression
 case class JavaMethodCall(callee: JavaExpressionOrQuery, methodName: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
@@ -33,14 +36,13 @@ case class JavaStringLiteral(string: String) extends JavaExpression
 
 object JavaExpression {
   def build(exp: Expression): JavaExpressionOrQuery = exp match {
-    case null => throw new NullPointerException
+    case null => ???
     case exp: IntegerLiteralExpr =>
       JavaIntLit(exp.getValue.toInt)
     case exp: AssignExpr =>
       val (lhs, isLocal) = exp.getTarget match {
         case f: FieldAccessExpr => (f.getField, false)
         case _ =>
-          println(exp.getTarget)
           ???
       }
 
@@ -86,6 +88,8 @@ object JavaExpression {
       JavaMethodCall(scope, exp.getName, args)
     case exp: VariableDeclarationExpr =>
       throw new RuntimeException("this case should be handled in the JavaStatement#build method :/")
+    case exp: NullLiteralExpr => 
+      JavaNull
     case _ =>
       println(s"$exp : ${exp.getClass} not implemented, do it man")
       ???
