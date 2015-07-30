@@ -63,7 +63,7 @@ case class MultisetApplication[A](op: CasBinaryOperator[A], multiset: Multiset[M
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = {
     val itemsList: List[MathExp[A]] = multiset.splitToMultisets.map({x: Multiset[MathExp[A]] =>
       val (exp, number) = x.items.head
-      new MultisetApplication[A](op, new Multiset[MathExp[A]](Map(exp.substitute(map) -> number)))
+      new MultisetApplication[A](op, Multiset[MathExp[A]](Map(exp.substitute(map) -> number)))
     })
 
     itemsList.tail.foldLeft(itemsList.head){ (x: MathExp[A], y: MathExp[A]) => op(x, y) }

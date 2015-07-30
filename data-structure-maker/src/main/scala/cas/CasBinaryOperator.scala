@@ -1,7 +1,7 @@
 package cas
 
 class CasBinaryOperator[A](val name: Name,
-                           val properties: List[OperatorProperty],
+                           val properties: Set[OperatorProperty],
                            val identities: List[A] = List(),
                            val annihilator: Option[A] = None) {
   def apply(lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = lhs.applyBinaryOperator(this, rhs)
@@ -50,7 +50,7 @@ case object Associative extends OperatorProperty
 case object Idempotent extends OperatorProperty
 case object Invertible extends OperatorProperty
 
-case class minOperator[A]() extends CasBinaryOperator[A](Name("min"), List(Commutative, Associative, Idempotent))
+case class minOperator[A]() extends CasBinaryOperator[A](Name("min"), Set(Commutative, Associative, Idempotent))
 
 object min {
   def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = minOperator()(lhs, rhs)

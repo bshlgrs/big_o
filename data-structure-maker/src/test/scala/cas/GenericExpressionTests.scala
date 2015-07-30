@@ -15,6 +15,12 @@ class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatch
 
   type Exp = MathExp[Name]
 
+  implicit lazy val genOperator: Arbitrary[CasBinaryOperator[Name]] = Arbitrary(for {
+    x <- Gen.option(Gen.const(Idempotent))
+    y <- Gen.option(Gen.const(Associative))
+    z <- Gen.option(Gen.const(Commutative))
+  } yield new CasBinaryOperator(Name("f"), List(x, y, z).flatten.toSet))
+
   property("Min is commutative") {
     forAll { (a: Exp, b: Exp) =>
       min(a, b) must be(min(b, a))
@@ -24,6 +30,16 @@ class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatch
   property("Min is associative") {
     forAll { (a: Exp, b: Exp, c: Exp) =>
       min(a, min(b, c)) must be(min(min(a, b), c))
+    }
+  }
+
+  property("Functions are associative if they should be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp, b: Exp, c: Exp) =>
+      if (f.is(Associative)) {
+        f(a, f(b, c)) must be(f(f(a, b), c))
+      } else {
+        f(a, f(b, c)) must not be f(f(a, b), c)
+      }
     }
   }
 }
