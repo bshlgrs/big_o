@@ -1,7 +1,7 @@
 package java_parser
 
 import java.io.StringBufferInputStream
-import java_transpiler.AstBuilder
+import java_transpiler.{JavaClass, AstBuilder}
 
 import ast_renderers.RubyOutputter
 import com.github.javaparser.JavaParser
@@ -25,6 +25,10 @@ object JavaParserTest {
   def parseJava(java: String) = {
     val stringBuffer = new StringBufferInputStream(java)
     JavaParser.parse(stringBuffer)
+  }
+
+  def parseJavaClassToAst(java: String): JavaClass = {
+    AstBuilder.build(parseJava(java)).head
   }
 
   val javaString =

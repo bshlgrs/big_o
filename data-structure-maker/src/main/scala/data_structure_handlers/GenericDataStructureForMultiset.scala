@@ -1,9 +1,11 @@
 package data_structure_handlers
 
+import java_parser.JavaParserTest
 import java_transpiler.{JavaStatement, JavaClass, JavaMethodDeclaration}
 import big_o.BigO
+import com.github.javaparser.JavaParser
 
-class GenericDataStructureForMultiset(insertion: Option[MutatingMethodImplementation],
+case class GenericDataStructureForMultiset(insertion: Option[MutatingMethodImplementation],
                            removal: Option[MutatingMethodImplementation],
                            time: JavaMethodDeclaration,
                            initialization: List[JavaStatement],

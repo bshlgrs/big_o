@@ -22,6 +22,8 @@ object RubyOutputter {
     val initializationString = if (javaClass.constructor.isDefined || javaClass.fields.exists(_.initialValue.isDefined)) {
       val initializationMethod = JavaMethodDeclaration(
         "initialize",
+        None,
+        false,
         javaClass.constructor.map(_.args).getOrElse(Nil),
         javaClass.constructor.map(_.body).getOrElse(Nil) ++ initializationStmts)
       outputMethod(initializationMethod)
@@ -30,7 +32,7 @@ object RubyOutputter {
       ""
 
     val fields = javaClass.fields.map({ (x) =>
-      s"  # ${x.name}: ${x.javaType.toScalaTypeString()} = ${x.initialValue}"
+      s"# ${x.name}: ${x.javaType.toScalaTypeString()} = ${x.initialValue}"
     }).mkString("\n")
 
     val methodsString = javaClass.methods.map(outputMethod).mkString("\n\n")
@@ -45,7 +47,7 @@ object RubyOutputter {
 
     val body = outputBlock(decl.body, true)
 
-    s"  def ${decl.name}$args\n$body\n  end"
+    s"def ${if (decl.isStatic) "self." else ""}${decl.name}$args\n$body\nend"
   }
 
   def outputStatement(stmt: JavaStatement, isAtEnd: Boolean): String = {
@@ -73,8 +75,8 @@ object RubyOutputter {
   }
 
   def outputBlock(stmts: List[JavaStatement], isAtEnd: Boolean): String = {
-    val body = stmts.dropRight(1).map("    " + outputStatement(_, false) + "\n").mkString("")
-    val lastStatementInBody = stmts.lastOption.map("    " + outputStatement(_, isAtEnd)).getOrElse("")
+    val body = stmts.dropRight(1).map(outputStatement(_, false) + "\n").mkString("")
+    val lastStatementInBody = stmts.lastOption.map(outputStatement(_, isAtEnd)).getOrElse("")
     body + "\n" + lastStatementInBody
   }
 
@@ -105,8 +107,6 @@ object RubyOutputter {
     case JavaFieldAccess(JavaThis, field) => s"@$field"
     case JavaFieldAccess(scope, field) => outputExpression(scope) + "." + field
     case JavaMethodCall(scope, field, args) => outputExpression(scope) + "." + field + mbBracket(args.map(outputExpression))
-//    case JavaVariableDeclarationExpression(name, _, local, expr) =>
-//      outputExpression(JavaAssignmentExpression(name, local, expr))
     case JavaNull => "nil"
     case _ =>
       println(s"you need to implement ${exp.getClass}")

@@ -39,7 +39,7 @@ object TestLoadingJavaDataStructure {
         |
         |    void afterInsert() {}
         |
-        |    BigO timeForQuery(Query query) {
+        |    static BigO timeForQuery(Query query) {
         |      if (query.reduction() == null) {
         |          return Logarithmic.time();
         |      } else {
@@ -55,6 +55,11 @@ object TestLoadingJavaDataStructure {
 
     val structure = AstBuilder.build(cu).head
     println(structure)
-    println(RubyOutputter.outputClass(structure))
+
+    val thing = GenericDataStructureForMultiset.build(structure)
+
+    val chimera = ChimeraMultisetClass(List(thing, thing)).toJavaClass
+
+    println(RubyOutputter.outputClass(chimera))
   }
 }

@@ -46,4 +46,12 @@ object JavaType {
         ???
     }
   }
+
+  def buildOptionType(thing: Type): Option[JavaType] = {
+    thing match {
+      case _: VoidType => None
+      case _ => Some(build(thing))
+    }
+
+  }
 }
