@@ -37,8 +37,30 @@ class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatch
     forAll { (f: CasBinaryOperator[Name], a: Exp, b: Exp, c: Exp) =>
       if (f.is(Associative)) {
         f(a, f(b, c)) must be(f(f(a, b), c))
-      } else {
+      }
+    }
+  }
+
+  property("Functions are not associative if they should not be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp, b: Exp, c: Exp) =>
+      if (!f.is(Associative) && a != b && b != c && a != c) {
         f(a, f(b, c)) must not be f(f(a, b), c)
+      }
+    }
+  }
+
+  property("Functions are commutative if they should be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp, b: Exp) =>
+      if (f.is(Commutative)) {
+        f(a, b) must be(f(b, a))
+      }
+    }
+  }
+
+  property("Functions are not commutative if they should not be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp, b: Exp) =>
+      if (!f.is(Commutative) && a != b) {
+        f(a, b) must not be f(b, a)
       }
     }
   }

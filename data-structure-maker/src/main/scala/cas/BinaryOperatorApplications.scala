@@ -44,10 +44,10 @@ case class ListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]]) 
   }
 
   def leftCombineWithItem(item: MathExp[A]) = {
-    ListApplication(op, list :+ item).perhapsDeflate()
+    ListApplication(op, item +: list).perhapsDeflate()
   }
 
-  def rightCombineWithItem(item: MathExp[A]) = leftCombineWithItem(item)
+  def rightCombineWithItem(item: MathExp[A]) = { ListApplication(op, list :+ item).perhapsDeflate() }
 
   def perhapsDeflate() = this.list.size match {
     case 0 => ???
@@ -147,7 +147,7 @@ case class BinaryTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], r
 }
 
 case class SymmetricTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], rhs: MathExp[A]) extends BinaryOperatorApplication[A](op) {
-  assert(lhs.hashCode() <= rhs.hashCode())
+  assert(lhs.hashCode() <= rhs.hashCode(), "ordering is violated for SymmetricIdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
 
@@ -172,7 +172,7 @@ case class SymmetricTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A]
 }
 
 case class SymmetricIdempotentTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], rhs: MathExp[A]) extends BinaryOperatorApplication[A](op) {
-  assert(lhs.hashCode() < rhs.hashCode())
+  assert(lhs.hashCode() < rhs.hashCode(), "ordering is violated for SymmetricIdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
 
@@ -201,7 +201,7 @@ case class SymmetricIdempotentTreeApplication[A](op: CasBinaryOperator[A], lhs: 
 }
 
 case class IdempotentTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], rhs: MathExp[A]) extends BinaryOperatorApplication[A](op) {
-  assert(lhs != rhs)
+  assert(lhs != rhs, "invariant violated in IdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
 

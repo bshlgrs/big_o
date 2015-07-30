@@ -6,6 +6,7 @@ class CasBinaryOperator[A](val name: Name,
                            val annihilator: Option[A] = None) {
   def apply(lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = lhs.applyBinaryOperator(this, rhs)
 
+  override def toString = s"$name[${properties.mkString(",")}]"
 
   // this deals with the case when you're taking the min of two expressions which aren't mins themselves.
   def seedWithOperation(lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = {
@@ -15,12 +16,12 @@ class CasBinaryOperator[A](val name: Name,
       case (true, false, true) =>
         if (lhs == rhs)
           lhs
-        else if (lhs.hashCode() > rhs.hashCode())
+        else if (lhs.hashCode() < rhs.hashCode())
           SymmetricIdempotentTreeApplication[A](this, lhs, rhs)
         else
           SymmetricIdempotentTreeApplication[A](this, rhs, lhs)
       case (true, false, false) =>
-        if (lhs.hashCode() > rhs.hashCode())
+        if (lhs.hashCode() < rhs.hashCode())
           SymmetricTreeApplication[A](this, lhs, rhs)
         else
           SymmetricTreeApplication[A](this, rhs, lhs)
@@ -50,7 +51,7 @@ case object Associative extends OperatorProperty
 case object Idempotent extends OperatorProperty
 case object Invertible extends OperatorProperty
 
-case class minOperator[A]() extends CasBinaryOperator[A](Name("min"), Set(Commutative, Associative, Idempotent))
+case class minOperator[A]() extends CasBinaryOperator[A](Name("min"), Set(Commutative, Associative))
 
 object min {
   def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = minOperator()(lhs, rhs)

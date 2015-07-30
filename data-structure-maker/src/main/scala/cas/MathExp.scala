@@ -261,5 +261,6 @@ object tester {
     val (x, y, z) = (CasVariable(Name("x")), CasVariable(Name("y")), CasVariable(Name("z")))
     println(min(min(x, y), z))
     println(min(x, min(y, z)))
+    println(min(min(x, y), z) == min(x, min(y, z)))
   }
 }
