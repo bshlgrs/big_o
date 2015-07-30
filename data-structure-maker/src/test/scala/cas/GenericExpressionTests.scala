@@ -7,7 +7,6 @@ import org.scalatest.matchers.MustMatchers
 import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.scalacheck.Prop.forAll
 
-
 class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
 
   import ExpressionGenerators._
@@ -18,13 +17,13 @@ class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatch
 
   property("Min is commutative") {
     forAll { (a: Exp, b: Exp) =>
-      min()(a, b) must be(min()(b, a))
+      min(a, b) must be(min(b, a))
     }
   }
 
   property("Min is associative") {
     forAll { (a: Exp, b: Exp, c: Exp) =>
-      min()(a, min()(b, c)) must be(min()(min()(a, b), c))
+      min(a, min(b, c)) must be(min(min(a, b), c))
     }
   }
 }

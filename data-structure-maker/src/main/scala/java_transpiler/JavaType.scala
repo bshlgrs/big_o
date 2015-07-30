@@ -25,6 +25,13 @@ case class JavaClassType(name: String, itemTypes: List[JavaType]) extends JavaTy
   lazy val toScalaTypeString = s"$name[${itemTypes.map(_.toScalaTypeString()).mkString(", ")}]"
 }
 
+case class JavaFunctionType(argTypes: List[JavaType], returnType: Option[JavaType]) extends JavaType {
+  lazy val toScalaTypeString = {
+    val typeString = returnType.map(_.toScalaTypeString()).getOrElse("Unit")
+    s"(${argTypes.mkString(", ")}) => $typeString"
+  }
+}
+
 object JavaType {
   def build(thing: Type): JavaType = {
     thing match {

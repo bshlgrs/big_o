@@ -12,8 +12,8 @@ object ExpressionGenerators {
     result <- Gen.oneOf(genVariable, genConstant, genSum, genProduct)
   } yield result
 
-  lazy val genVariable: Gen[VariableMathExp[Name]] = {
-    Gen.oneOf("x", "y", "z").map((name: String) => VariableMathExp(Name(name)))
+  lazy val genVariable: Gen[CasVariable[Name]] = {
+    Gen.oneOf("x", "y", "z").map((name: String) => CasVariable(Name(name)))
   }
 
   lazy val genSum: Gen[MathExp[Name]] = for {

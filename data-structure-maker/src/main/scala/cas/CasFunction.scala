@@ -23,10 +23,10 @@ case class CasFunction[A](params: List[A], body: MathExp[A]) {
 object ExampleFunctions {
   implicit def intToNumber(value: Int): Number[_] = Number(value)
   implicit def stringToName(name: String): Name = Name(name)
-  implicit def nameToVariableExpression(name: Name): VariableMathExp[_] = VariableMathExp(name)
+  implicit def nameToVariableExpression(name: Name): CasVariable[_] = CasVariable(name)
 
-  val plus = CasFunction(List("x", "y"), VariableMathExp("x") + VariableMathExp("y"))
-  val plus2 = CasFunction(List("x", "y"), VariableMathExp("x") + VariableMathExp("y") * Number(2))
+  val plus = CasFunction(List("x", "y"), CasVariable("x") + CasVariable("y"))
+  val plus2 = CasFunction(List("x", "y"), CasVariable("x") + CasVariable("y") * Number(2))
 
   def main(args: Array[String]) {
     println(plus)

@@ -31,13 +31,15 @@ object RubyOutputter {
     else
       ""
 
+    val innerClasses = javaClass.innerClasses.map(outputClass).mkString("\n")
+
     val fields = javaClass.fields.map({ (x) =>
       s"# ${x.name}: ${x.javaType.toScalaTypeString()} = ${x.initialValue}"
     }).mkString("\n")
 
     val methodsString = javaClass.methods.map(outputMethod).mkString("\n\n")
 
-    val badlyFormattedVersion = s"class ${javaClass.name}\n$initializationString\n$methodsString\nend"
+    val badlyFormattedVersion = s"class ${javaClass.name}\n$innerClasses\n$initializationString\n$methodsString\nend"
 
     ExternalInterfaces.rubocopify(badlyFormattedVersion)
   }
@@ -95,12 +97,12 @@ object RubyOutputter {
       }
     case JavaLambdaExpr(args, body) => args match {
       case Nil => throw new RuntimeException("Hey, I don't allow side effects in lambdas right now, so this is bad")
-      case _ => s"{ |${args.map(_._1).mkString(", ")}| ${outputExpression(body)} }"
+      case _ => s"lambda { |${args.map(_._1).mkString(", ")}| ${outputExpression(body)} }"
     }
     case JavaThis => "self"
     case JavaVariable(name) => name
     case exp@JavaBinaryOperation(op, lhs, rhs) => s"(${outputExpression(lhs)} ${exp.opString} ${outputExpression(rhs)})"
-    case JavaNewObject(className, args) => s"$className.new${mbBracket(args.map(outputExpression))}"
+    case JavaNewObject(className, _, args) => s"$className.new${mbBracket(args.map(outputExpression))}"
     case JavaArrayInitializerExpr(items) => "[" + items.map(outputExpression).mkString(", ") + "]"
     case JavaStringLiteral(x) => "\"" + x + "\""
     case JavaBoolLit(x) => x.toString

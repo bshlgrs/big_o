@@ -21,7 +21,7 @@ case class JavaIntLit(item: Int) extends JavaExpression
 case class JavaBoolLit(boolean: Boolean) extends JavaExpression
 case class JavaMethodCall(callee: JavaExpressionOrQuery, methodName: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
 case class JavaFieldAccess(thing: JavaExpressionOrQuery, field: String) extends JavaExpression
-case class JavaNewObject(className: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
+case class JavaNewObject(className: String, typeArgs: List[JavaType], args: List[JavaExpressionOrQuery]) extends JavaExpression
 case object JavaThis extends JavaExpression
 case class JavaVariable(name: String) extends JavaExpression
 case class JavaIfExpression(cond: JavaExpressionOrQuery, ifTrue: JavaExpressionOrQuery, ifFalse: JavaExpressionOrQuery) extends JavaExpression
@@ -35,7 +35,7 @@ case class JavaStringLiteral(string: String) extends JavaExpression
 // OH SHIT OH SHIT OH SHIT I BET THAT I WILL REGRET THIS LATER
 
 object JavaExpression {
-  def build(exp: Expression): JavaExpressionOrQuery = exp match {
+  def build(exp: Expression): JavaExpression = exp match {
     case null => ???
     case exp: IntegerLiteralExpr =>
       JavaIntLit(exp.getValue.toInt)
@@ -58,7 +58,7 @@ object JavaExpression {
       }
       JavaAssignmentExpression(lhs, isLocal, outExp)
     case exp: BinaryExpr =>
-      JavaBinaryOperation(exp.getOperator, build(exp.getLeft), build(exp.getRight))
+      JavaBinaryOperation(exp.getOperator, build(exp.getLeft), build(exp.getRight)).asInstanceOf[JavaExpression]
     //    case exp: MethodCallExpr =>
     //      ???
     case exp: NameExpr => JavaVariable(exp.getName)
@@ -67,8 +67,9 @@ object JavaExpression {
     case exp: ObjectCreationExpr =>
       val javaArgs = Option(exp.getArgs).map(_.asScala.toList)
       val args = javaArgs.getOrElse(List())
-      val name = exp.getType.toString
-      JavaNewObject(name, args.map(build))
+      val name = exp.getType.getName
+      val typeArgs = Option(exp.getTypeArgs).map(_.asScala.toList).getOrElse(Nil).map(JavaType.build)
+      JavaNewObject(name, typeArgs, args.map(build))
     case exp: LambdaExpr => exp.getBody match {
       case stmt: ExpressionStmt =>
         val params = exp.getParameters.asScala.map(_.getId.getName -> JavaIntType).toList
@@ -88,7 +89,7 @@ object JavaExpression {
       JavaMethodCall(scope, exp.getName, args)
     case exp: VariableDeclarationExpr =>
       throw new RuntimeException("this case should be handled in the JavaStatement#build method :/")
-    case exp: NullLiteralExpr => 
+    case exp: NullLiteralExpr =>
       JavaNull
     case _ =>
       println(s"$exp : ${exp.getClass} not implemented, do it man")

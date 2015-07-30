@@ -10,8 +10,8 @@ object ExternalInterfaces {
     writer.write(string)
     writer.close()
 
-    "rubocop -a /tmp/test.rb".!
+    "rubocop -a /tmp/test.rb" ! ProcessLogger(line => ())
 
-    Source.fromFile("/tmp/test.rb" ).mkString("")
+    Source.fromFile("/tmp/test.rb").mkString("")
   }
 }

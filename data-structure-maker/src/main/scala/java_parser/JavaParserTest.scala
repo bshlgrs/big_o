@@ -51,12 +51,15 @@ object JavaParserTest {
 
 object ParserOfApi {
   def main(args: Array[String]) {
-    val cu = JavaParserTest.parseJava(
+    val priorityQueue = JavaParserTest.parseJavaClassToAst(
       """
         |public class PriorityQueue  {
-        |    String[] fields = {"priority", "id"};
-        |    // ideally I'd be able to not specify those two bools
-        |    MagicMultiset stuff = new MagicMultiset(fields, true, true);
+        |    class Item {
+        |        int priority;
+        |        int id;
+        |    }
+        |
+        |    MagicMultiset stuff = new MagicMultiset<Item>(true, true);
         |
         |    int getIdOfCheapest() {
         |        return stuff.orderDescendingBy(x -> x.priority).first.id;
@@ -72,11 +75,9 @@ object ParserOfApi {
         |        return cheapest;
         |    }
         |}
-        |
       """.stripMargin)
 
-    val queueMethods = AstBuilder.build(cu).head.methods.filter(_.isSuperFuckingSimple())
-    queueMethods.foreach((x) => println(RubyOutputter.outputMethod(x)))
+    println(RubyOutputter.outputClass(priorityQueue))
   }
 
 }

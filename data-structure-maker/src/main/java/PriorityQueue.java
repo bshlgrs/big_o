@@ -1,7 +1,10 @@
 //public class PriorityQueue  {
-//    String[] fields = {"priority", "id"};
-//    // ideally I'd be able to not specify those two bools
-//    MagicMultiset stuff = new MagicMultiset(fields, true, true);
+//    class Item {
+//        int priority;
+//        int id;
+//    }
+//
+//    MagicMultiset stuff = new MagicMultiset<Item>(true, true);
 //
 //    int getIdOfCheapest() {
 //        return stuff.orderDescendingBy(x -> x.priority).first.id;

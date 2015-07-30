@@ -13,8 +13,8 @@ case class ChimeraMultisetClass(components: List[GenericDataStructureForMultiset
     val removeImplementations = components.map(_.removal).collect({case Some(x) => x})
 
     val remove = MutatingMethodImplementation.buildMethod("remove", List("item" -> JavaIntType),
-      insertImplementations, Nil)
+      removeImplementations, Nil)
 
-    JavaClass("Chimera", None, Nil, List(insert, remove))
+    JavaClass("Chimera", None, Nil, List(insert, remove), Nil)
   }
 }
