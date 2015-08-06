@@ -5,12 +5,15 @@ abstract class BinaryOperatorApplication[A](val operator: CasBinaryOperator[A]) 
   def leftCombineWithItem(other: MathExp[A]): MathExp[A]
   def rightCombineWithItem(other: MathExp[A]): MathExp[A]
   def perhapsDeflate(): MathExp[A]
+  def postSimplify(): MathExp[A] = this
 }
 
 case class SetApplication[A](op: CasBinaryOperator[A], set: Set[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
   assert(op.is(Commutative, Associative, Idempotent))
 
   lazy val variables = set.flatMap(_.variables)
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = set.map(_.mapOverVariables(f)).reduce(op.lossilyConvert[B]()(_, _))
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = SetApplication[A](op, set.map(_.substitute(map)))
 
@@ -32,9 +35,10 @@ case class SetApplication[A](op: CasBinaryOperator[A], set: Set[MathExp[A]]) ext
   }
 }
 
-
 case class ListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]]) extends BinaryOperatorApplication[A](op) {
   lazy val variables = list.flatMap(_.variables).toSet
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = list.map(_.mapOverVariables(f)).reduce(op.lossilyConvert[B]()(_, _))
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = list.map(_.substitute(map)).reduce(op.apply)
 
@@ -59,6 +63,13 @@ case class ListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]]) 
 case class MultisetApplication[A](op: CasBinaryOperator[A], multiset: Multiset[MathExp[A]])
   extends BinaryOperatorApplication[A](op) {
   lazy val variables = multiset.keys.flatMap(_.variables).toSet
+
+  def mapOverVariables[B](f: A => B): MathExp[B] =
+    multiset.splitToMultisets.map((x: Multiset[MathExp[A]]) =>
+      MultisetApplication(
+        op.lossilyConvert[B](),
+        Multiset[MathExp[B]](Map(x.items.head._1.mapOverVariables(f) -> x.items.head._2)))
+    ).asInstanceOf[List[MathExp[B]]].reduce(op.lossilyConvert[B]()(_, _))
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = {
     val itemsList: List[MathExp[A]] = multiset.splitToMultisets.map({x: Multiset[MathExp[A]] =>
@@ -90,6 +101,8 @@ case class MultisetApplication[A](op: CasBinaryOperator[A], multiset: Multiset[M
 case class NoDuplicatesListApplication[A](op: CasBinaryOperator[A], list: List[MathExp[A]])
   extends BinaryOperatorApplication[A](op) {
   lazy val variables = list.flatMap(_.variables).toSet
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = list.map(_.mapOverVariables(f)).reduce(op.lossilyConvert[B]()(_, _))
 
   def substitute(map: Map[A, MathExp[A]]): MathExp[A] = {
     def removeConsecutiveDuplicates(list: List[MathExp[A]]): List[MathExp[A]] = list match {
@@ -134,6 +147,8 @@ case class NoDuplicatesListApplication[A](op: CasBinaryOperator[A], list: List[M
 case class BinaryTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A], rhs: MathExp[A]) extends BinaryOperatorApplication[A](op) {
   lazy val variables = lhs.variables ++ rhs.variables
 
+  def mapOverVariables[B](f: A => B): MathExp[B] = op.lossilyConvert[B]()(lhs.mapOverVariables(f), rhs.mapOverVariables(f))
+
   def substitute(map: Map[A, MathExp[A]]) = op.apply(lhs.substitute(map), rhs.substitute(map))
 
   def combineWithCollection(other: this.type) = {
@@ -150,6 +165,8 @@ case class SymmetricTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A]
   assert(lhs.hashCode() <= rhs.hashCode(), "ordering is violated for SymmetricIdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = op.lossilyConvert[B]()(lhs.mapOverVariables(f), rhs.mapOverVariables(f))
 
   def substitute(map: Map[A, MathExp[A]]) = op.apply(lhs.substitute(map), rhs.substitute(map))
 
@@ -175,6 +192,8 @@ case class SymmetricIdempotentTreeApplication[A](op: CasBinaryOperator[A], lhs: 
   assert(lhs.hashCode() < rhs.hashCode(), "ordering is violated for SymmetricIdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = op.lossilyConvert[B]()(lhs.mapOverVariables(f), rhs.mapOverVariables(f))
 
   def substitute(map: Map[A, MathExp[A]]) = op.apply(lhs.substitute(map), rhs.substitute(map))
 
@@ -204,6 +223,8 @@ case class IdempotentTreeApplication[A](op: CasBinaryOperator[A], lhs: MathExp[A
   assert(lhs != rhs, "invariant violated in IdempotentTreeApplication")
 
   lazy val variables = lhs.variables ++ rhs.variables
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = op.lossilyConvert[B]()(lhs.mapOverVariables(f), rhs.mapOverVariables(f))
 
   def substitute(map: Map[A, MathExp[A]]) = op.apply(lhs.substitute(map), rhs.substitute(map))
 

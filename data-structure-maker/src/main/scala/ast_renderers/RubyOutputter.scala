@@ -83,17 +83,12 @@ object RubyOutputter {
   }
 
   def outputExpression(exp: JavaExpressionOrQuery): String = exp match {
-    case JavaIntLit(n) => n.toString
+    case JavaMath(ast) => ast.mapOverVariables(outputExpression).toString
     case JavaAssignmentExpression(name, isLocal, expr) =>
       isLocal match {
         case true => s"$name = ${outputExpression(expr)}"
         case false =>
-          expr match {
-            case thing@JavaBinaryOperation(op, lhs, rhs) if lhs == JavaFieldAccess(JavaThis, name) =>
-              s"@$name ${thing.opString}= ${outputExpression(rhs)}"
-            case _ =>
-              s"@$name = ${outputExpression(expr)}"
-          }
+          s"@$name = ${outputExpression(expr)}"
       }
     case JavaLambdaExpr(args, body) => args match {
       case Nil => throw new RuntimeException("Hey, I don't allow side effects in lambdas right now, so this is bad")
@@ -101,7 +96,6 @@ object RubyOutputter {
     }
     case JavaThis => "self"
     case JavaVariable(name) => name
-    case exp@JavaBinaryOperation(op, lhs, rhs) => s"(${outputExpression(lhs)} ${exp.opString} ${outputExpression(rhs)})"
     case JavaNewObject(className, _, args) => s"$className.new${mbBracket(args.map(outputExpression))}"
     case JavaArrayInitializerExpr(items) => "[" + items.map(outputExpression).mkString(", ") + "]"
     case JavaStringLiteral(x) => "\"" + x + "\""
@@ -110,9 +104,6 @@ object RubyOutputter {
     case JavaFieldAccess(scope, field) => outputExpression(scope) + "." + field
     case JavaMethodCall(scope, field, args) => outputExpression(scope) + "." + field + mbBracket(args.map(outputExpression))
     case JavaNull => "nil"
-    case _ =>
-      println(s"you need to implement ${exp.getClass}")
-      ???
   }
 
   def mbBracket(blah: List[String]) = {

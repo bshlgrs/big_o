@@ -19,7 +19,7 @@ case class JavaMethodDeclaration(name: String,
     case _ => false
   }
 
-  def buildQuery(): Query = {
+  def buildQuery(): UnorderedQuery = {
     if (isSuperFuckingSimple()) {
       ???
     } else {
@@ -73,5 +73,10 @@ object JavaMethodDeclaration {
 
   def parse(string: String): JavaMethodDeclaration = {
     JavaParserTest.parseJavaClassToAst(s"class Example { $string }").methods.head
+  }
+
+  def main(args: Array[String]) {
+    val string = "int factorial() { Ant output[]; Bee<Cat> output; if (x==0) output = 1; else output = factorial(x-1) * x; return output; }"
+    println(parse(string).variables.mkString("\n"))
   }
 }

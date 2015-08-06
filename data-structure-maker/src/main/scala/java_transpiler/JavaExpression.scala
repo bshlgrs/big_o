@@ -1,23 +1,30 @@
 package java_transpiler
 
+import cas.{CasVariable, Number, MathExp}
 import com.github.javaparser.ast.expr._
 import com.github.javaparser.ast.stmt.ExpressionStmt
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-case class JavaBinaryOperation(op: BinaryExpr.Operator, lhs: JavaExpressionOrQuery, rhs: JavaExpressionOrQuery) extends JavaExpressionOrQuery {
-  lazy val opString = op match {
-    case BinaryExpr.Operator.plus => "+"
-    case BinaryExpr.Operator.times => "*"
-    case BinaryExpr.Operator.equals => "=="
-    case BinaryExpr.Operator.greaterEquals => ">="
+case object JavaBinaryOperation {
+  def opToMath(op: BinaryExpr.Operator, lhs: JavaExpressionOrQuery, rhs: JavaExpressionOrQuery): JavaExpressionOrQuery = {
+    op match {
+      case BinaryExpr.Operator.plus => JavaMath(casify(lhs) + casify(rhs))
+      case BinaryExpr.Operator.times => JavaMath(casify(lhs) * casify(rhs))
+      case BinaryExpr.Operator.minus => JavaMath(casify(lhs) - casify(rhs))
+      case BinaryExpr.Operator.divide => JavaMath(casify(lhs) / casify(rhs))
+    }
+  }
+
+  def casify(thing: JavaExpressionOrQuery): MathExp[JavaExpressionOrQuery] = thing match {
+    case JavaMath(ast) => ast
+    case _ => CasVariable(thing)
   }
 }
 
 sealed abstract class JavaExpression extends JavaExpressionOrQuery
 
 case object JavaNull extends JavaExpression
-case class JavaIntLit(item: Int) extends JavaExpression
 case class JavaBoolLit(boolean: Boolean) extends JavaExpression
 case class JavaMethodCall(callee: JavaExpressionOrQuery, methodName: String, args: List[JavaExpressionOrQuery]) extends JavaExpression
 case class JavaFieldAccess(thing: JavaExpressionOrQuery, field: String) extends JavaExpression
@@ -25,40 +32,38 @@ case class JavaNewObject(className: String, typeArgs: List[JavaType], args: List
 case object JavaThis extends JavaExpression
 case class JavaVariable(name: String) extends JavaExpression
 case class JavaIfExpression(cond: JavaExpressionOrQuery, ifTrue: JavaExpressionOrQuery, ifFalse: JavaExpressionOrQuery) extends JavaExpression
-// maybe the next line is a massive mistake :/
 case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpressionOrQuery) extends JavaExpression
 case object JavaUnit extends JavaExpression
 case class JavaAssignmentExpression(name: String, local: Boolean, expression: JavaExpressionOrQuery) extends JavaExpression
 case class JavaArrayInitializerExpr(items: List[JavaExpressionOrQuery]) extends JavaExpression
 case class JavaStringLiteral(string: String) extends JavaExpression
-
-// OH SHIT OH SHIT OH SHIT I BET THAT I WILL REGRET THIS LATER
+case class JavaMath(math: MathExp[JavaExpressionOrQuery]) extends JavaExpression
 
 object JavaExpression {
   def build(exp: Expression): JavaExpression = exp match {
     case null => ???
     case exp: IntegerLiteralExpr =>
-      JavaIntLit(exp.getValue.toInt)
+      JavaMath(Number(exp.getValue.toInt))
     case exp: AssignExpr =>
       val (lhs, isLocal) = exp.getTarget match {
         case f: FieldAccessExpr => (f.getField, false)
-        case _ =>
-          ???
+        case n: NameExpr => (n.getName, true)
       }
 
       val mbOp = exp.getOperator match {
         case AssignExpr.Operator.assign => None
         case AssignExpr.Operator.plus => Some(BinaryExpr.Operator.plus)
         case AssignExpr.Operator.minus => Some(BinaryExpr.Operator.minus)
+        case _ => ???
       }
 
       val outExp = mbOp match {
         case None => build(exp.getValue)
-        case Some(op) => JavaBinaryOperation(op, JavaFieldAccess(JavaThis, lhs), build(exp.getValue))
+        case Some(op) => JavaBinaryOperation.opToMath(op, JavaFieldAccess(JavaThis, lhs), build(exp.getValue))
       }
       JavaAssignmentExpression(lhs, isLocal, outExp)
     case exp: BinaryExpr =>
-      JavaBinaryOperation(exp.getOperator, build(exp.getLeft), build(exp.getRight)).asInstanceOf[JavaExpression]
+      JavaBinaryOperation.opToMath(exp.getOperator, build(exp.getLeft), build(exp.getRight)).asInstanceOf[JavaExpression]
     //    case exp: MethodCallExpr =>
     //      ???
     case exp: NameExpr => JavaVariable(exp.getName)

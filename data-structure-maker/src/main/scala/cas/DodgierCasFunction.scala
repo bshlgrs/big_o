@@ -1,6 +1,6 @@
 package cas
 
-case class CasFunction[A](params: List[A], body: MathExp[A]) {
+case class DodgierCasFunction[A](params: List[A], body: MathExp[A]) {
   override def toString = s"f(${params.mkString(", ")}) = $body"
   lazy val isWellFormed = body.variables.forall(params.contains(_))
 
@@ -25,8 +25,8 @@ object ExampleFunctions {
   implicit def stringToName(name: String): Name = Name(name)
   implicit def nameToVariableExpression(name: Name): CasVariable[_] = CasVariable(name)
 
-  val plus = CasFunction(List("x", "y"), CasVariable("x") + CasVariable("y"))
-  val plus2 = CasFunction(List("x", "y"), CasVariable("x") + CasVariable("y") * Number(2))
+  val plus = DodgierCasFunction(List("x", "y"), CasVariable("x") + CasVariable("y"))
+  val plus2 = DodgierCasFunction(List("x", "y"), CasVariable("x") + CasVariable("y") * Number(2))
 
   def main(args: Array[String]) {
     println(plus)

@@ -34,6 +34,7 @@ case class JavaFunctionType(argTypes: List[JavaType], returnType: Option[JavaTyp
 
 object JavaType {
   def build(thing: Type): JavaType = {
+    // todo: I think this is broken for arrays
     thing match {
       case x: PrimitiveType =>
         x.getType match {
@@ -48,7 +49,8 @@ object JavaType {
         }).get
         JavaClassType(x.getName, typeArgs)
       case x: ReferenceType =>
-        JavaArrayType(build(x.getType))
+        // previously JavaArrayType(_)
+        build(x.getType)
       case _ =>
         ???
     }

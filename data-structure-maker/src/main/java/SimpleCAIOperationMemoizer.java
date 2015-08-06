@@ -1,5 +1,5 @@
 import big_o.*;
-import java_transpiler.queries.Query;
+import java_transpiler.queries.UnorderedQuery;
 
 import java.util.function.BiFunction;
 
@@ -28,7 +28,7 @@ public class SimpleCAIOperationMemoizer {
 
     void afterInsert() {}
 
-    BigO timeForQuery(Query query) {
+    BigO timeForQuery(UnorderedQuery query) {
       if (query.reduction() == null) {
           return Logarithmic.time();
       } else {

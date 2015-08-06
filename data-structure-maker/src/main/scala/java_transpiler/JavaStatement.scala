@@ -24,6 +24,8 @@ sealed abstract class JavaStatement {
   }
 
   def descendantExpressions: List[JavaExpressionOrQuery] = descendantStatements.flatMap(_.directDescendantExpressions)
+
+  def modify(astModifier: AstModifier): List[JavaStatement] = astModifier.applyToStmt(this)
 }
 
 case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery]) extends JavaStatement
@@ -49,7 +51,7 @@ object JavaStatement {
           val name = e.getVars.get(0).getId.getName
           val javaType = JavaType.build(e.getType)
 
-          val body = Try(e.getChildrenNodes.get(1).asInstanceOf[VariableDeclarator].getInit).toOption
+          val body = Try(e.getChildrenNodes.get(1).asInstanceOf[VariableDeclarator].getInit).toOption.flatMap(Option(_))
           VariableDeclarationStatement(name, javaType, body.map(JavaExpression.build))
         case e: Expression => ExpressionStatement(JavaExpression.build(e))
       }

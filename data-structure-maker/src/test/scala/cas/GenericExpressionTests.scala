@@ -64,4 +64,20 @@ class GenericExpressionTests extends PropSpec with PropertyChecks with MustMatch
       }
     }
   }
+
+  property("Functions are idempotent if they should be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp) =>
+      if (f.is(Idempotent)) {
+        f(a, a) must be(a)
+      }
+    }
+  }
+
+  property("Functions are not idempotent if they should not be") {
+    forAll { (f: CasBinaryOperator[Name], a: Exp) =>
+      if (!f.is(Idempotent)) {
+        f(a, a) must not be a
+      }
+    }
+  }
 }

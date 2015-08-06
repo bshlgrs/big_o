@@ -7,4 +7,6 @@ abstract class JavaExpressionOrQuery {
   def querify(): JavaExpressionOrQuery = {
     ???
   }
+
+  def modify(astModifier: AstModifier): JavaExpressionOrQuery = astModifier.applyToExpr(this)
 }
