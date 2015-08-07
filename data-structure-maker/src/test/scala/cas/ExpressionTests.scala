@@ -111,6 +111,18 @@ class ExpressionTests extends PropSpec with PropertyChecks with MustMatchers {
     }
   }
 
+  property("Min is commutative") {
+    forAll { (lhs:Exp, rhs: Exp) =>
+      min(lhs, rhs) must be(min(rhs, lhs))
+    }
+  }
+
+  property("Min is associative") {
+    forAll { (a: Exp, b: Exp, c: Exp) =>
+      min(min(a, b), c) must be(min(a, min(b, c)))
+    }
+  }
+
   property("Monte Carlo equals isn't obviously broken") {
     forAll { (a: Exp, b: Exp) =>
       a.monteCarloEquals(a + b) must be(b.monteCarloEquals(Number(0)))

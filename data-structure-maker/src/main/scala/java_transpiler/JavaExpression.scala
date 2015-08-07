@@ -1,6 +1,6 @@
 package java_transpiler
 
-import cas.{CasVariable, Number, MathExp}
+import cas._
 import com.github.javaparser.ast.expr._
 import com.github.javaparser.ast.stmt.ExpressionStmt
 import scala.collection.JavaConverters._
@@ -13,6 +13,13 @@ case object JavaBinaryOperation {
       case BinaryExpr.Operator.times => JavaMath(casify(lhs) * casify(rhs))
       case BinaryExpr.Operator.minus => JavaMath(casify(lhs) - casify(rhs))
       case BinaryExpr.Operator.divide => JavaMath(casify(lhs) / casify(rhs))
+      case BinaryExpr.Operator.equals => JavaMath(niceFunctions.equals(casify(lhs), casify(rhs)))
+      case BinaryExpr.Operator.greater => JavaMath(niceFunctions.greaterThan(casify(lhs), casify(rhs)))
+      case BinaryExpr.Operator.less => JavaMath(niceFunctions.greaterThan(casify(rhs), casify(lhs)))
+      case BinaryExpr.Operator.and => JavaMath(logicalAnd(casify(rhs), casify(lhs)))
+      case BinaryExpr.Operator.binAnd => JavaMath(bitwiseAnd(casify(rhs), casify(lhs)))
+      case BinaryExpr.Operator.or => JavaMath(logicalOr(casify(rhs), casify(lhs)))
+      case BinaryExpr.Operator.binOr => JavaMath(bitwiseAnd(casify(rhs), casify(lhs)))
     }
   }
 
@@ -96,9 +103,9 @@ object JavaExpression {
       throw new RuntimeException("this case should be handled in the JavaStatement#build method :/")
     case exp: NullLiteralExpr =>
       JavaNull
-    case _ =>
-      println(s"$exp : ${exp.getClass} not implemented, do it man")
-      ???
+//    case _ =>
+//      println(s"$exp : ${exp.getClass} not implemented, do it man")
+//      ???
   }
 
 

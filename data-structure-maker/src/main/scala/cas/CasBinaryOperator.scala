@@ -71,5 +71,17 @@ object bitwiseAnd {
   def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = operator()(lhs, rhs)
 }
 
+object logicalAnd {
+  case class operator[A]() extends CasBinaryOperator[A](Name("&"), Set(Commutative, Associative, Idempotent))
+
+  def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = operator()(lhs, rhs)
+}
+
+object logicalOr {
+  case class operator[A]() extends CasBinaryOperator[A](Name("&"), Set(Commutative, Associative, Idempotent))
+
+  def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = operator()(lhs, rhs)
+}
+
 
 //object max extends CasBinaryOperator(Name("min"), List(Commutative[Any], Associative[Any], Idempotent[Any]))

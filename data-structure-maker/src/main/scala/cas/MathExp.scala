@@ -277,11 +277,44 @@ object ExpressionHelper {
   }
 }
 
-object tester {
-  def main(args: Array[String]) {
-    val (x, y, z) = (CasVariable(Name("x")), CasVariable(Name("y")), CasVariable(Name("z")))
-    println(min(min(x, y), z))
-    println(min(x, min(y, z)))
-    println(min(min(x, y), z) == min(x, min(y, z)))
+case class CasFunction[A](function: MathExp[A], arity: Int) extends MathExp[A] {
+  override def toString = function.toString
+
+  def mapOverVariables[B](f: A => B): MathExp[B] = CasFunction(function.mapOverVariables(f), arity)
+
+  val variables = function.variables
+
+  def substitute(map: Map[A, MathExp[A]]) = this.copy(function = function.substitute(map))
+}
+
+case class CasConstant[A](name: String) extends MathExp[A] {
+  override def toString = name
+  val variables = Set[A]()
+  def mapOverVariables[B](f: A => B): MathExp[B] = CasConstant[B](name)
+  def substitute(map: Map[A, MathExp[A]]) = this
+}
+
+case class CasFunctionApplication[A](function: CasFunction[A], args: List[MathExp[A]]) extends MathExp[A] {
+  assert(function.arity == args.length)
+
+  val variables = function.variables ++ args.flatMap(_.variables)
+
+  def mapOverVariables[B](f: A => B): MathExp[B] =
+    CasFunctionApplication(
+      new CasFunction(function.function.mapOverVariables(f), function.arity), args.map(_.mapOverVariables(f)))
+
+  def substitute(map: Map[A, MathExp[A]]) = CasFunctionApplication(function, args.map(_.substitute(map)))
+}
+
+object niceFunctions {
+  object equals {
+    def equals[A]() = CasFunction[A](CasConstant("=="), 2)
+    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(equals(), List(lhs, rhs))
+  }
+
+  object greaterThan {
+    def greaterThan[A]() = CasFunction[A](CasConstant(">"), 2)
+    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(greaterThan(), List(lhs, rhs))
   }
 }
+
