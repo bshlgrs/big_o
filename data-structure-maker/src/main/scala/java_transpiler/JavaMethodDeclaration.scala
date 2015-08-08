@@ -1,6 +1,6 @@
 package java_transpiler
 
-import java_parser.JavaParserTest
+import java_parser.JavaParserWrapper
 
 import cas._
 import java_transpiler.queries._
@@ -18,6 +18,8 @@ case class JavaMethodDeclaration(name: String,
     case List(ReturnStatement(_)) => true
     case _ => false
   }
+
+  def modifyWithAstModifier(astModifier: AstModifier): JavaMethodDeclaration = ???
 
   def buildQuery(): UnorderedQuery = {
     if (isSuperFuckingSimple()) {
@@ -40,6 +42,7 @@ case class JavaMethodDeclaration(name: String,
 
 case class JavaConstructorDeclaration(args: List[(String, JavaType)],
                                       body: List[JavaStatement]) {
+  def modifyWithAstModifier(astModifier: AstModifier): JavaConstructorDeclaration = ???
 }
 
 object JavaMethodDeclaration {
@@ -72,7 +75,7 @@ object JavaMethodDeclaration {
   }
 
   def parse(string: String): JavaMethodDeclaration = {
-    JavaParserTest.parseJavaClassToAst(s"class Example { $string }").methods.head
+    JavaParserWrapper.parseJavaClassToAst(s"class Example { $string }").methods.head
   }
 
   def main(args: Array[String]) {

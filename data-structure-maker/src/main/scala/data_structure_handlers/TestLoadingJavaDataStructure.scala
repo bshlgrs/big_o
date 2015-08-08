@@ -1,13 +1,13 @@
 package data_structure_handlers
 
-import java_parser.JavaParserTest
+import java_parser.JavaParserWrapper
 import java_transpiler.AstBuilder
 
 import ast_renderers.RubyOutputter
 
 object TestLoadingJavaDataStructure {
   def main(args: Array[String]) {
-    val cu = JavaParserTest.parseJava(
+    val cu = JavaParserWrapper.parseJava(
       """
         |import big_o.*;
         |import java_transpiler.queries.Query;

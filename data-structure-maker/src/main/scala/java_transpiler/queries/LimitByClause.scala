@@ -1,15 +1,39 @@
 package java_transpiler.queries
 
-import java_transpiler.JavaExpressionOrQuery
+import java_transpiler.{JavaMath, JavaExpressionOrQuery}
 
 import cas.MathExp
 
-sealed abstract class LimitByClause
+case class LimitByClause(nodeVariableName: String,
+                         orderingFunction: JavaExpressionOrQuery,
+                         limitingFunction: JavaExpressionOrQuery) {
+  def childrenExpressions() = List(orderingFunction, limitingFunction)
 
-case class ConstantSizeConstantLimitByClause(nodeExprToMaximise: MathExp[JavaExpressionOrQuery], number: Int)
-  extends LimitByClause
-case class VariableSizeConstantLimitByClause(
-                    nodeExprToMaximise: MathExp[JavaExpressionOrQuery],
-                    number: MathExp[JavaExpressionOrQuery]) extends LimitByClause
-case class RandomShitLimitByClause(paramAndNodeExprToMaximise: MathExp[JavaExpressionOrQuery],
-                                   number: MathExp[JavaExpressionOrQuery]) extends LimitByClause
+  def freeVariables(): Set[String] = childrenExpressions().flatMap(_.freeVariables).toSet - nodeVariableName
+
+  val constantSizeLimitBy = ConstantSizeLimitBy.build(this)
+
+}
+
+abstract class LimitByClauseNiceness
+
+case class ConstantSizeLimitBy(size: Int) extends LimitByClauseNiceness
+
+object ConstantSizeLimitBy {
+  // This should work even if the number isn't actually constant, but it's constant over the time period we care about
+  def build(limitByClause: LimitByClause): Option[ConstantSizeLimitBy] = limitByClause.limitingFunction match {
+    case JavaMath(mathExp: MathExp[JavaExpressionOrQuery]) => mathExp match {
+      case n: cas.Number[_] => Some(ConstantSizeLimitBy(n.value))
+    }
+    case _ => None
+  }
+}
+
+object PurelyNodeBasedOrderingFunction extends LimitByClauseNiceness {
+  def build(limitByClause: LimitByClause): Option[LimitByClauseNiceness] = {
+    if (limitByClause.freeVariables().subsetOf(Set(limitByClause.nodeVariableName)))
+      Some(this)
+    else
+      None
+  }
+}

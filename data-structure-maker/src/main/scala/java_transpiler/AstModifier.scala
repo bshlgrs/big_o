@@ -1,6 +1,6 @@
 package java_transpiler
 
-case class AstModifier(stmtMapper: JavaStatement => List[JavaStatement], exprMapper: JavaExpressionOrQuery => JavaExpressionOrQuery) {
+class AstModifier(stmtMapper: JavaStatement => List[JavaStatement], exprMapper: JavaExpressionOrQuery => JavaExpressionOrQuery) {
   def applyToStmt(stmt: JavaStatement): List[JavaStatement] = stmtMapper(mapOverStmt(stmt))
   def applyToExpr(expr: JavaExpressionOrQuery): JavaExpressionOrQuery = exprMapper(mapOverExpr(expr))
 
@@ -21,6 +21,21 @@ case class AstModifier(stmtMapper: JavaStatement => List[JavaStatement], exprMap
   }
 
   def mapOverExpr(expr: JavaExpressionOrQuery): JavaExpressionOrQuery = expr match {
-    case _ => ???
+    case JavaNull => JavaNull
+    case expr: JavaBoolLit => expr
+    case JavaMethodCall(callee, name, args) => JavaMethodCall(applyToExpr(callee), name, args.map(applyToExpr))
+    case JavaFieldAccess(thing, field) => JavaFieldAccess(applyToExpr(thing), field)
+    case JavaNewObject(className, typeArgs, args) => JavaNewObject(className, typeArgs, args.map(applyToExpr))
+    case JavaThis => JavaThis
+    case expr: JavaVariable => expr
+    case JavaIfExpression(cond, ifTrue, ifFalse) => JavaIfExpression(applyToExpr(cond), applyToExpr(ifTrue), applyToExpr(ifFalse))
+    case JavaLambdaExpr(args, body) => JavaLambdaExpr(args, applyToExpr(body))
+    case JavaUnit => JavaThis
+    case JavaAssignmentExpression(name, local, value) => JavaAssignmentExpression(name, local, applyToExpr(value))
+    case JavaArrayInitializerExpr(items) => JavaArrayInitializerExpr(items.map(mapOverExpr))
+    case expr: JavaStringLiteral => expr
+    case expr: JavaMath => JavaMath(expr.math.mapOverVariables(mapOverExpr))
   }
+
+  def mapOverClass(javaClass: JavaClass): JavaClass = javaClass.modifyWithAstModifier(this)
 }

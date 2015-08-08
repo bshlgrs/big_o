@@ -29,7 +29,24 @@ case object JavaBinaryOperation {
   }
 }
 
-sealed abstract class JavaExpression extends JavaExpressionOrQuery
+sealed abstract class JavaExpression extends JavaExpressionOrQuery {
+  def childrenExpressions(): List[JavaExpressionOrQuery] = this match {
+    case JavaNull => Nil
+    case expr: JavaBoolLit => Nil
+    case JavaMethodCall(callee, name, args) => args :+ callee
+    case JavaFieldAccess(thing, field) => List(thing)
+    case JavaNewObject(className, typeArgs, args) => args
+    case JavaThis => Nil
+    case expr: JavaVariable => Nil
+    case JavaIfExpression(cond, ifTrue, ifFalse) => List(cond, ifTrue, ifFalse)
+    case JavaLambdaExpr(args, body) => List(body)
+    case JavaUnit => Nil
+    case JavaAssignmentExpression(name, local, value) => List(value)
+    case JavaArrayInitializerExpr(items) => items
+    case expr: JavaStringLiteral => Nil
+    case JavaMath(math) => math.variables.toList
+  }
+}
 
 case object JavaNull extends JavaExpression
 case class JavaBoolLit(boolean: Boolean) extends JavaExpression
@@ -37,9 +54,13 @@ case class JavaMethodCall(callee: JavaExpressionOrQuery, methodName: String, arg
 case class JavaFieldAccess(thing: JavaExpressionOrQuery, field: String) extends JavaExpression
 case class JavaNewObject(className: String, typeArgs: List[JavaType], args: List[JavaExpressionOrQuery]) extends JavaExpression
 case object JavaThis extends JavaExpression
-case class JavaVariable(name: String) extends JavaExpression
+case class JavaVariable(name: String) extends JavaExpression {
+  override def freeVariables: Set[String] = Set(name)
+}
 case class JavaIfExpression(cond: JavaExpressionOrQuery, ifTrue: JavaExpressionOrQuery, ifFalse: JavaExpressionOrQuery) extends JavaExpression
-case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpressionOrQuery) extends JavaExpression
+case class JavaLambdaExpr(args: List[(String, JavaType)], out: JavaExpressionOrQuery) extends JavaExpression {
+  override def freeVariables: Set[String] = out.freeVariables -- args.map(_._1).toSet
+}
 case object JavaUnit extends JavaExpression
 case class JavaAssignmentExpression(name: String, local: Boolean, expression: JavaExpressionOrQuery) extends JavaExpression
 case class JavaArrayInitializerExpr(items: List[JavaExpressionOrQuery]) extends JavaExpression
@@ -103,9 +124,9 @@ object JavaExpression {
       throw new RuntimeException("this case should be handled in the JavaStatement#build method :/")
     case exp: NullLiteralExpr =>
       JavaNull
-//    case _ =>
-//      println(s"$exp : ${exp.getClass} not implemented, do it man")
-//      ???
+    case _ =>
+      println(s"$exp : ${exp.getClass} not implemented, do it man")
+      ???
   }
 
 

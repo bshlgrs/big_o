@@ -83,6 +83,8 @@ abstract class MathExp[A] {
               op.seedWithOperation(this, other)
           }
   }
+
+//  def separateVariables(set: Set[A], otherSide: MathExp[A]): Option[(MathExp[A], MathExp[A])]
 //  def solve(name: A, otherSide: Expression): Option[List[Expression]]
 }
 
@@ -287,6 +289,8 @@ case class CasFunction[A](function: MathExp[A], arity: Int) extends MathExp[A] {
   def substitute(map: Map[A, MathExp[A]]) = this.copy(function = function.substitute(map))
 }
 
+// things like "min"
+// this might be a terrible mistake :/
 case class CasConstant[A](name: String) extends MathExp[A] {
   override def toString = name
   val variables = Set[A]()

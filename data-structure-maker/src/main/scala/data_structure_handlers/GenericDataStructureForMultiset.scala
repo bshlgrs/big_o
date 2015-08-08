@@ -1,6 +1,6 @@
 package data_structure_handlers
 
-import java_parser.JavaParserTest
+import java_parser.JavaParserWrapper
 import java_transpiler.{JavaStatement, JavaClass, JavaMethodDeclaration}
 import big_o.BigO
 import com.github.javaparser.JavaParser

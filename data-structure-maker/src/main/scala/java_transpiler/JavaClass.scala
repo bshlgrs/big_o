@@ -1,5 +1,7 @@
 package java_transpiler
 
+import java_parser.JavaParserWrapper
+
 import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
 
@@ -18,6 +20,34 @@ case class JavaClass(name: String,
 
   def getField(name: String): Option[JavaFieldDeclaration] = {
     fields.find(_.name == name)
+  }
+
+  def getInnerClass(name: String): Option[JavaClass] = innerClasses.find(_.name == name)
+
+  def magicMultisets(): Map[String, String] = {
+    fields.flatMap((fieldDeclaration: JavaFieldDeclaration) => fieldDeclaration.javaType match {
+      case JavaClassType(classTypeName, args) if classTypeName == "MagicMultiset" =>
+        List(classTypeName -> args.head.toScalaTypeString())
+      case _ => Nil
+    }).toMap
+  }
+
+  def methodsCalledOnObject(name: String): List[String] = {
+    methods.flatMap((method: JavaMethodDeclaration) =>
+      method.body.flatMap(_.descendantExpressions).collect({
+        case JavaMethodCall(JavaVariable(objectName), methodName, _) if objectName == name => methodName
+      })
+    )
+  }
+
+  def modifyWithAstModifier(astModifier: AstModifier): JavaClass = {
+    JavaClass(
+      name,
+      constructor.map(_.modifyWithAstModifier(astModifier)),
+      fields.map(_.modifyWithAstModifier(astModifier)),
+      methods.map(_.modifyWithAstModifier(astModifier)),
+      innerClasses.map(_.modifyWithAstModifier(astModifier))
+    )
   }
 }
 
@@ -58,4 +88,7 @@ object JavaClass {
     JavaClass(typeDeclaration.getName, constructorAst, fieldDeclarationAsts, methodDeclarationAsts, innerClasses)
   }
 
+  def parse(string: String): JavaClass = {
+    JavaParserWrapper.parseJavaClassToAst(s"class Example { $string }")
+  }
 }

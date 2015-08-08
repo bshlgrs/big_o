@@ -3,7 +3,9 @@ package java_transpiler
 import com.github.javaparser.ast.body._
 
 
-case class JavaFieldDeclaration(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery] = None)
+case class JavaFieldDeclaration(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery] = None) {
+  def modifyWithAstModifier(astModifier: AstModifier): JavaFieldDeclaration = ???
+}
 
 object JavaFieldDeclaration {
   def build(fieldDeclaration: FieldDeclaration): JavaFieldDeclaration = {
@@ -18,6 +20,7 @@ object JavaFieldDeclaration {
       }
       case _ => ???
     }
-
   }
+
+
 }

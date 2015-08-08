@@ -1,5 +1,7 @@
 package java_transpiler
 
+import java_parser.JavaParserWrapper
+
 import com.github.javaparser.ast.`type`._
 
 import scala.collection.JavaConverters._
@@ -22,7 +24,10 @@ case class JavaArrayType(itemType: JavaType) extends JavaType {
 }
 
 case class JavaClassType(name: String, itemTypes: List[JavaType]) extends JavaType {
-  lazy val toScalaTypeString = s"$name[${itemTypes.map(_.toScalaTypeString()).mkString(", ")}]"
+  lazy val toScalaTypeString = itemTypes match {
+    case Nil => name
+    case _ => s"$name[${itemTypes.map(_.toScalaTypeString()).mkString(", ")}]"
+  }
 }
 
 case class JavaFunctionType(argTypes: List[JavaType], returnType: Option[JavaType]) extends JavaType {
@@ -34,7 +39,6 @@ case class JavaFunctionType(argTypes: List[JavaType], returnType: Option[JavaTyp
 
 object JavaType {
   def build(thing: Type): JavaType = {
-    // todo: I think this is broken for arrays
     thing match {
       case x: PrimitiveType =>
         x.getType match {
@@ -62,5 +66,15 @@ object JavaType {
       case _ => Some(build(thing))
     }
 
+  }
+
+  def parse(string: String): JavaType = {
+    JavaParserWrapper.parseJavaClassToAst(s"class Example { $string x; }").fields.head.javaType
+  }
+
+  def main(args: Array[String]) {
+    val parsedType = parse("Blah<Int>")
+    println(parsedType)
+    println(parsedType.toScalaTypeString())
   }
 }

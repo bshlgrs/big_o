@@ -1,13 +1,15 @@
 package java_parser
 
 import java.io.StringBufferInputStream
-import java_transpiler.{JavaClass, AstBuilder}
+import java_transpiler._
 
 import ast_renderers.RubyOutputter
 import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.CompilationUnit
 
-object JavaParserTest {
+import scala.collection.mutable
+
+object JavaParserWrapper {
   def main(args: Array[String]) {
     val node = parseJavaFile("")
     val classAsts = AstBuilder.build(node)
@@ -18,11 +20,11 @@ object JavaParserTest {
   }
 
   def parseJavaFile(filename: String): CompilationUnit = {
-    // i know this is deprecated but IDGAF
     parseJava(javaString)
   }
 
   def parseJava(java: String) = {
+    // i know this is deprecated but IDGAF
     val stringBuffer = new StringBufferInputStream(java)
     JavaParser.parse(stringBuffer)
   }
@@ -51,7 +53,7 @@ object JavaParserTest {
 
 object ParserOfApi {
   def main(args: Array[String]) {
-    val priorityQueue = JavaParserTest.parseJavaClassToAst(
+    val priorityQueue = JavaParserWrapper.parseJavaClassToAst(
       """
         |public class PriorityQueue  {
         |    class Item {
@@ -59,7 +61,7 @@ object ParserOfApi {
         |        int id;
         |    }
         |
-        |    MagicMultiset stuff = new MagicMultiset<Item>(true, true);
+        |    MagicMultiset<Item> stuff = new MagicMultiset<Item>(true, true);
         |
         |    int getIdOfCheapest() {
         |        return stuff.orderDescendingBy(x -> x.priority).first.id;
@@ -77,7 +79,16 @@ object ParserOfApi {
         |}
       """.stripMargin)
 
-    println(RubyOutputter.outputClass(priorityQueue))
+    println(priorityQueue.methodsCalledOnObject("stuff"))
+
+    val buffer = new mutable.ListBuffer[String]()
+
+    val methodsCalledOnObjectVisitor = new AstModifier(List(_), {
+      case x@ JavaMethodCall(JavaVariable("stuff"), name, _) => { buffer.prepend(name) ; x}
+      case x => x
+    })
+
+//    priorityQueue.methods.foreach(_.)
   }
 
 }
