@@ -1,5 +1,7 @@
 package java_transpiler.queries
 
-class JavaContext {
+import java_transpiler._
+
+case class JavaContext(unorderedMultisets: Map[String, JavaClass]) {
 
 }

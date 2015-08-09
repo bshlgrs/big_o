@@ -1,8 +1,7 @@
 package java_transpiler.queries
 
-import java_transpiler.{JavaVariable, JavaExpressionOrQuery}
-
-import cas.MathExp
+import java_transpiler._
+import cas._
 
 case class WhereClause(
                   nodeVariableName: String,
@@ -20,6 +19,31 @@ case class WhereClause(
 
   lazy val freeVariables = childrenExpressions().flatMap(_.freeVariables).toSet - nodeVariableName
 }
+
+object WhereClause {
+  def build(predicate: JavaExpressionOrQuery, context: JavaContext): WhereClause = {
+    predicate match {
+      case JavaLambdaExpr(args, body) =>
+        assert(args.length == 1, s"where clause $predicate")
+        body match {
+          case JavaMath(CasFunctionApplication(op, List(lhs, rhs))) =>
+            if (op == niceFunctions.equals.equals)
+              WhereClause(args.head._1,
+                JavaBinaryOperation.decasify(lhs),
+                JavaBinaryOperation.decasify(rhs),
+                true,
+                context)
+            else if (op == niceFunctions.greaterThan.greaterThan)
+              WhereClause(args.head._1,
+                JavaBinaryOperation.decasify(lhs),
+                JavaBinaryOperation.decasify(rhs),
+                false,
+                context)
+            else
+              throw new InternalTypeError(s"I have no idea how to do that: $predicate")
+        }
+      case _ => throw new InternalTypeError(s"where clause got the condition $predicate, which isn't a lambda")
+}}}
 
 abstract class WhereClauseNiceness
 

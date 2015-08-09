@@ -1,5 +1,7 @@
 package java_transpiler
 
+import java_transpiler.queries.JavaContext
+
 import cas.Name
 import com.github.javaparser.ast.body.VariableDeclarator
 import com.github.javaparser.ast.expr._
@@ -26,6 +28,17 @@ sealed abstract class JavaStatement {
   def descendantExpressions: List[JavaExpressionOrQuery] = descendantStatements.flatMap(_.directDescendantExpressions)
 
   def modify(astModifier: AstModifier): List[JavaStatement] = astModifier.applyToStmt(this)
+
+  def querify(c: JavaContext): JavaStatement = this match {
+    case stmt@VariableDeclarationStatement(_, _, initialValue) =>
+      stmt.copy(initialValue = initialValue.map(_.querify(c)))
+    case ReturnStatement(value) => ReturnStatement(value.querify(c))
+    case ExpressionStatement(value) => ExpressionStatement(value.querify(c))
+    case IfStatement(cond, trueCase, falseCase) =>
+      IfStatement(cond.querify(c), trueCase.map(_.querify(c)), falseCase.map(_.querify(c)))
+    case WhileStatement(cond, body) =>
+      WhileStatement(cond.querify(c), body.map(_.querify(c)))
+  }
 }
 
 case class VariableDeclarationStatement(name: String, javaType: JavaType, initialValue: Option[JavaExpressionOrQuery]) extends JavaStatement
@@ -66,4 +79,6 @@ object JavaStatement {
       println(s"$stmt : ${stmt.getClass} not implemented, you should do it")
       ???
   }
+
+  def parse(stuff: String): JavaStatement = JavaMethodDeclaration.parse(s"void f() { $stuff }").body.head
 }

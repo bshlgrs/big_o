@@ -26,6 +26,7 @@ object JavaParserWrapper {
   def parseJava(java: String) = {
     // i know this is deprecated but IDGAF
     val stringBuffer = new StringBufferInputStream(java)
+    println(java)
     JavaParser.parse(stringBuffer)
   }
 
@@ -64,7 +65,7 @@ object ParserOfApi {
         |    MagicMultiset<Item> stuff = new MagicMultiset<Item>(true, true);
         |
         |    int getIdOfCheapest() {
-        |        return stuff.orderDescendingBy(x -> x.priority).first.id;
+        |        return stuff.filter(x -> x.id > 2).limitBy(x -> x.priority, 5).sum();
         |    }
         |
         |    int insertItem(int priority, int id) {
@@ -81,14 +82,7 @@ object ParserOfApi {
 
     println(priorityQueue.methodsCalledOnObject("stuff"))
 
-    val buffer = new mutable.ListBuffer[String]()
-
-    val methodsCalledOnObjectVisitor = new AstModifier(List(_), {
-      case x@ JavaMethodCall(JavaVariable("stuff"), name, _) => { buffer.prepend(name) ; x}
-      case x => x
-    })
-
-//    priorityQueue.methods.foreach(_.)
+    println(priorityQueue.querify())
   }
 
 }

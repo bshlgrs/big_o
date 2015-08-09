@@ -1,6 +1,7 @@
 package java_transpiler
 
 import java_parser.JavaParserWrapper
+import java_transpiler.queries.JavaContext
 
 import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
@@ -10,8 +11,13 @@ case class JavaClass(name: String,
                      fields: List[JavaFieldDeclaration],
                      methods: List[JavaMethodDeclaration],
                      innerClasses: List[JavaClass]) {
-  def allSuperFuckingSimpleMethodNames(): List[String] = {
-    methods.filter(_.isSuperFuckingSimple()).map(_.name)
+  def querify() = {
+    val context = JavaContext(unorderedTables())
+    this.copy(methods = methods.map(_.querify(context)))
+  }
+
+  def unorderedTables(): Map[String, JavaClass] = {
+    magicMultisets().map((x) => x._1 -> getInnerClass(x._2).get)
   }
 
   def getMethod(name: String): Option[JavaMethodDeclaration] = {
@@ -27,7 +33,7 @@ case class JavaClass(name: String,
   def magicMultisets(): Map[String, String] = {
     fields.flatMap((fieldDeclaration: JavaFieldDeclaration) => fieldDeclaration.javaType match {
       case JavaClassType(classTypeName, args) if classTypeName == "MagicMultiset" =>
-        List(classTypeName -> args.head.toScalaTypeString())
+        List(fieldDeclaration.name -> args.head.toScalaTypeString())
       case _ => Nil
     }).toMap
   }

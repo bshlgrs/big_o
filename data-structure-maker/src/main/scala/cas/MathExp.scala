@@ -312,13 +312,13 @@ case class CasFunctionApplication[A](function: CasFunction[A], args: List[MathEx
 
 object niceFunctions {
   object equals {
-    def equals[A]() = CasFunction[A](CasConstant("=="), 2)
-    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(equals(), List(lhs, rhs))
+    def equals[A] = CasFunction[A](CasConstant("=="), 2)
+    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(equals, List(lhs, rhs))
   }
 
   object greaterThan {
-    def greaterThan[A]() = CasFunction[A](CasConstant(">"), 2)
-    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(greaterThan(), List(lhs, rhs))
+    def greaterThan[A] = CasFunction[A](CasConstant(">"), 2)
+    def apply[A](lhs: MathExp[A], rhs: MathExp[A]): MathExp[A] = CasFunctionApplication(greaterThan, List(lhs, rhs))
   }
 }
 

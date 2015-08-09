@@ -14,19 +14,11 @@ case class JavaMethodDeclaration(name: String,
                                  isStatic: Boolean,
                                  args: List[(String, JavaType)],
                                  body: List[JavaStatement]) {
-  def isSuperFuckingSimple() = body match {
-    case List(ReturnStatement(_)) => true
-    case _ => false
-  }
 
   def modifyWithAstModifier(astModifier: AstModifier): JavaMethodDeclaration = ???
 
-  def buildQuery(): UnorderedQuery = {
-    if (isSuperFuckingSimple()) {
-      ???
-    } else {
-      throw new RuntimeException("I can only do this with super fucking simple things :/")
-    }
+  def querify(c: JavaContext): JavaMethodDeclaration = {
+    this.copy(body = body.map(_.querify(c)))
   }
 
   lazy val variables: List[VariableScopeDetails] = {

@@ -1,5 +1,7 @@
 package java_transpiler
 
+import java_transpiler.queries.{JavaContext, UnorderedQuery}
+
 // this class is implemented in JavaExpression and Query.
 abstract class JavaExpressionOrQuery {
   def descendantExpressions(): List[JavaExpressionOrQuery] = {
@@ -13,9 +15,13 @@ abstract class JavaExpressionOrQuery {
     childrenExpressions().flatMap(_.freeVariables).toSet
   }
 
-  def querify(): JavaExpressionOrQuery = {
-    ???
-  }
+  def querify(javaContext: JavaContext): JavaExpressionOrQuery
 
   def modify(astModifier: AstModifier): JavaExpressionOrQuery = astModifier.applyToExpr(this)
+}
+
+case class UnorderedQueryApplication(unorderedQuery: UnorderedQuery) extends JavaExpressionOrQuery {
+  override def childrenExpressions() = unorderedQuery.childrenExpressions()
+
+  def querify(javaContext: JavaContext) = this
 }

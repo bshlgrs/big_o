@@ -1,33 +1,13 @@
 package java_transpiler
 
+import java_transpiler.queries._
+
+
 import cas._
 import com.github.javaparser.ast.expr._
 import com.github.javaparser.ast.stmt.ExpressionStmt
 import scala.collection.JavaConverters._
 import scala.util.Try
-
-case object JavaBinaryOperation {
-  def opToMath(op: BinaryExpr.Operator, lhs: JavaExpressionOrQuery, rhs: JavaExpressionOrQuery): JavaExpressionOrQuery = {
-    op match {
-      case BinaryExpr.Operator.plus => JavaMath(casify(lhs) + casify(rhs))
-      case BinaryExpr.Operator.times => JavaMath(casify(lhs) * casify(rhs))
-      case BinaryExpr.Operator.minus => JavaMath(casify(lhs) - casify(rhs))
-      case BinaryExpr.Operator.divide => JavaMath(casify(lhs) / casify(rhs))
-      case BinaryExpr.Operator.equals => JavaMath(niceFunctions.equals(casify(lhs), casify(rhs)))
-      case BinaryExpr.Operator.greater => JavaMath(niceFunctions.greaterThan(casify(lhs), casify(rhs)))
-      case BinaryExpr.Operator.less => JavaMath(niceFunctions.greaterThan(casify(rhs), casify(lhs)))
-      case BinaryExpr.Operator.and => JavaMath(logicalAnd(casify(rhs), casify(lhs)))
-      case BinaryExpr.Operator.binAnd => JavaMath(bitwiseAnd(casify(rhs), casify(lhs)))
-      case BinaryExpr.Operator.or => JavaMath(logicalOr(casify(rhs), casify(lhs)))
-      case BinaryExpr.Operator.binOr => JavaMath(bitwiseAnd(casify(rhs), casify(lhs)))
-    }
-  }
-
-  def casify(thing: JavaExpressionOrQuery): MathExp[JavaExpressionOrQuery] = thing match {
-    case JavaMath(ast) => ast
-    case _ => CasVariable(thing)
-  }
-}
 
 sealed abstract class JavaExpression extends JavaExpressionOrQuery {
   def childrenExpressions(): List[JavaExpressionOrQuery] = this match {
@@ -45,6 +25,47 @@ sealed abstract class JavaExpression extends JavaExpressionOrQuery {
     case JavaArrayInitializerExpr(items) => items
     case expr: JavaStringLiteral => Nil
     case JavaMath(math) => math.variables.toList
+  }
+
+  def querify(c: JavaContext): JavaExpressionOrQuery = this match {
+    case JavaNull => this
+    case expr: JavaBoolLit => this
+    case JavaMethodCall(callee, name, args) => querifyMethodCall(callee.querify(c), name, args.map(_.querify(c)), c)
+    case JavaFieldAccess(thing, field) => JavaFieldAccess(thing.querify(c), field)
+    case JavaNewObject(className, typeArgs, args) => JavaNewObject(className, typeArgs, args.map(_.querify(c)))
+    case JavaThis => this
+    case expr: JavaVariable => this
+    case JavaIfExpression(cond, ifTrue, ifFalse) => JavaIfExpression(cond.querify(c), ifTrue.querify(c), ifFalse.querify(c))
+    case JavaLambdaExpr(args, body) => JavaLambdaExpr(args, body.querify(c))
+    case JavaUnit => this
+    case JavaAssignmentExpression(name, local, value) => JavaAssignmentExpression(name, local, value.querify(c))
+    case JavaArrayInitializerExpr(items) => JavaArrayInitializerExpr(items.map(_.querify(c)))
+    case expr: JavaStringLiteral => this
+    case JavaMath(math) => JavaBinaryOperation.decasify(math.mapOverVariables(_.querify(c)))
+  }
+
+  private def querifyMethodCall(callee: JavaExpressionOrQuery,
+                                name: String,
+                                args: List[JavaExpressionOrQuery],
+                                context: JavaContext): JavaExpressionOrQuery = {
+    name match {
+      case "insert" => JavaMethodCall(callee, name, args)
+      case "remove" => JavaMethodCall(callee, name, args)
+      case _ => {
+        val mbQuerifiedCallee: Option[UnorderedQuery] = callee match {
+          case callee @ UnorderedQueryApplication(query) => Some(query)
+          case JavaVariable(innerName) if context.unorderedMultisets.keys.toSet.contains(innerName) => {
+            Some(UnorderedQuery.blank(name))
+          }
+          case _ => None
+        }
+
+        mbQuerifiedCallee match {
+          case None => JavaMethodCall(callee, name, args)
+          case Some(querifiedCallee) => querifiedCallee.applyMethod(name, args, context)
+        }
+      }
+    }
   }
 }
 
@@ -129,5 +150,8 @@ object JavaExpression {
       ???
   }
 
+  def parse(stuff: String): JavaExpressionOrQuery = {
+    JavaStatement.parse(s"int x = $stuff;").asInstanceOf[VariableDeclarationStatement].initialValue.get
+  }
 
 }
