@@ -26,7 +26,6 @@ object JavaParserWrapper {
   def parseJava(java: String) = {
     // i know this is deprecated but IDGAF
     val stringBuffer = new StringBufferInputStream(java)
-    println(java)
     JavaParser.parse(stringBuffer)
   }
 
@@ -58,31 +57,38 @@ object ParserOfApi {
       """
         |public class PriorityQueue  {
         |    class Item {
-        |        int priority;
+        |        int priority1;
+        |        int priority2;
         |        int id;
         |    }
         |
-        |    MagicMultiset<Item> stuff = new MagicMultiset<Item>(true, true);
+        |    MagicMultiset<Item> stuff = new MagicMultiset<Item>();
         |
-        |    int getIdOfCheapest() {
-        |        return stuff.filter(x -> x.id > 2).limitBy(x -> x.priority, 5).sum();
+        |    int getCheapestByPriority1() {
+        |        return stuff.limitBy(x -> x.priority1, 1).filter(x -> x.id > 2).head();
         |    }
         |
-        |    int insertItem(int priority, int id) {
-        |        stuff.insert(priority, id);
+        |    int getCheapestByPriority2() {
+        |        return stuff.limitBy(x -> x.priority2, 1).head();
+        |    }
+        |
+        |    int insertItem(int priority1, int priority2, int id) {
+        |        stuff.insert(priority1, priority2, id);
         |    }
         |
         |    int popCheapest() {
-        |        int cheapest = getIdOfCheapest();
+        |        int cheapest = getCheapest();
         |        stuff.remove(cheapest);
         |        return cheapest;
         |    }
         |}
       """.stripMargin)
 
-    println(priorityQueue.methodsCalledOnObject("stuff"))
+    val querified = priorityQueue.querify()
+    println(querified)
 
-    println(priorityQueue.querify())
+    println(RubyOutputter.outputClass(priorityQueue))
+    println(RubyOutputter.outputClass(querified))
   }
 
 }

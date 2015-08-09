@@ -104,6 +104,7 @@ object RubyOutputter {
     case JavaFieldAccess(scope, field) => outputExpression(scope) + "." + field
     case JavaMethodCall(scope, field, args) => outputExpression(scope) + "." + field + mbBracket(args.map(outputExpression))
     case JavaNull => "nil"
+    case UnorderedQueryApplication(query) => query.toReasonableString()
   }
 
   def mbBracket(blah: List[String]) = {

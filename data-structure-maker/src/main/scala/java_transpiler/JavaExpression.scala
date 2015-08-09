@@ -55,7 +55,7 @@ sealed abstract class JavaExpression extends JavaExpressionOrQuery {
         val mbQuerifiedCallee: Option[UnorderedQuery] = callee match {
           case callee @ UnorderedQueryApplication(query) => Some(query)
           case JavaVariable(innerName) if context.unorderedMultisets.keys.toSet.contains(innerName) => {
-            Some(UnorderedQuery.blank(name))
+            Some(UnorderedQuery.blank(callee))
           }
           case _ => None
         }

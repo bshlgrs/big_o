@@ -2,13 +2,19 @@ package java_transpiler.queries
 
 import java_transpiler._
 
+import ast_renderers.RubyOutputter
 import cas.{Number, Name}
 
 case class UnorderedQuery(
-            source: String,
+            source: JavaExpressionOrQuery,
             whereClauses: List[WhereClause],
             limiter: Option[LimitByClause],
             reduction: Option[Reduction]) {
+  def toReasonableString(): String = toString // {
+//    s"UnorderedQuery(${RubyOutputter.outputExpression(source)}, where(${whereClauses.mkString(",")}), "  +
+//      limiter.map(_.toReasonableString).getOrElse("nil") ++ ", " ++
+//      reduction.map(_.toReasonableString).getOrElse("star") ++ ")"
+//  }
 
   val parameters = whereClauses.flatMap(_.freeVariables)++ limiter.map(_.freeVariables) ++ reduction.map(_.freeVariables)
 
@@ -27,21 +33,30 @@ case class UnorderedQuery(
         this.reduce(start, map, reducer, context)
       case ("sum", List()) =>
         this.sum(context)
-      case (_, _) =>
-        throw new RuntimeException(s"trying to call $methodName")
+      case (_, _) => JavaMethodCall(UnorderedQueryApplication(this), methodName, args)
     }
   }
 
-  def filter(arg: JavaExpressionOrQuery, context: JavaContext): JavaExpressionOrQuery = this match {
-    case UnorderedQuery(_, _, None, None) =>
-      UnorderedQueryApplication(UnorderedQuery(source, whereClauses :+ WhereClause.build(arg, context), None, None))
+  def filter(arg: JavaExpressionOrQuery, context: JavaContext): JavaExpressionOrQuery = {
+    val thisClause = List(WhereClause.build(arg, context))
+
+    this match {
+      case UnorderedQuery(_, _, None, None) =>
+        UnorderedQueryApplication(UnorderedQuery(source, whereClauses ++ thisClause, None, None))
+      case _ => UnorderedQueryApplication(
+        UnorderedQuery(UnorderedQueryApplication(this), thisClause, None, None))
+    }
   }
 
   def limitBy(ordering: JavaExpressionOrQuery, limiting: JavaExpressionOrQuery, context: JavaContext): JavaExpressionOrQuery = {
+    val thisClause = Some(LimitByClause.build(ordering, limiting, context))
+
     this match {
       case UnorderedQuery(_, _, None, None) =>
         UnorderedQueryApplication(
-          UnorderedQuery(source, whereClauses, Some(LimitByClause.build(ordering, limiting, context)), None))
+          UnorderedQuery(source, whereClauses, thisClause, None))
+      case _ => UnorderedQueryApplication(
+        UnorderedQuery(UnorderedQueryApplication(this), Nil, thisClause, None))
     }
   }
 
@@ -75,5 +90,5 @@ case class UnorderedQuery(
 
 
 object UnorderedQuery {
-  def blank(source: String) = UnorderedQuery(source, Nil, None, None)
+  def blank(source: JavaExpressionOrQuery) = UnorderedQuery(source, Nil, None, None)
 }
