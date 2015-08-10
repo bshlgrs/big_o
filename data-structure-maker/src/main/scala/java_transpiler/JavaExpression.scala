@@ -13,7 +13,7 @@ sealed abstract class JavaExpression extends JavaExpressionOrQuery {
   def childrenExpressions(): List[JavaExpressionOrQuery] = this match {
     case JavaNull => Nil
     case expr: JavaBoolLit => Nil
-    case JavaMethodCall(callee, name, args) => args :+ callee
+    case JavaMethodCall(callee, name, args) => List(callee) ++ args
     case JavaFieldAccess(thing, field) => List(thing)
     case JavaNewObject(className, typeArgs, args) => args
     case JavaThis => Nil

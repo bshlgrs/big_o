@@ -21,6 +21,13 @@ case class JavaMethodDeclaration(name: String,
     this.copy(body = body.map(_.querify(c)))
   }
 
+  def queries(): List[UnorderedQuery] = body.flatMap(_.descendantExpressions).collect({
+    case UnorderedQueryApplication(q) => q
+  })
+
+  lazy val descendantExpressions: List[JavaExpressionOrQuery] = body.flatMap(_.descendantExpressions)
+  lazy val descendantStatements: List[JavaStatement] = body.flatMap(_.descendantStatements)
+
   lazy val variables: List[VariableScopeDetails] = {
     val argVariables = args.map((tuple) => VariableScopeDetails(tuple._1, tuple._2, true))
     val localVariables = body.flatMap(_.descendantStatements).toSet.flatMap((x: JavaStatement) => x match {

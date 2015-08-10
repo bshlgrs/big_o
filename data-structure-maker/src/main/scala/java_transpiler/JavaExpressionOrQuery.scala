@@ -18,12 +18,16 @@ abstract class JavaExpressionOrQuery {
   def querify(javaContext: JavaContext): JavaExpressionOrQuery
 
   def modify(astModifier: AstModifier): JavaExpressionOrQuery = astModifier.applyToExpr(this)
+
+  def replaceVariables(map: Map[String, JavaExpressionOrQuery]): JavaExpressionOrQuery = {
+    this.modify(VariableReplacer(map))
+  }
 }
 
 case class UnorderedQueryApplication(unorderedQuery: UnorderedQuery) extends JavaExpressionOrQuery {
   override def childrenExpressions() = unorderedQuery.childrenExpressions()
 
   def querify(javaContext: JavaContext) = this
-  
-  
+
+
 }

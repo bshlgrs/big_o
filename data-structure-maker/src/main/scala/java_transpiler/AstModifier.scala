@@ -1,6 +1,11 @@
 package java_transpiler
 
-class AstModifier(stmtMapper: JavaStatement => List[JavaStatement], exprMapper: JavaExpressionOrQuery => JavaExpressionOrQuery) {
+import com.sun.javafx.fxml.expression.VariableExpression
+
+abstract class AstModifier() {
+  def stmtMapper(statement: JavaStatement): List[JavaStatement]
+  def exprMapper(expr: JavaExpressionOrQuery): JavaExpressionOrQuery
+
   def applyToStmt(stmt: JavaStatement): List[JavaStatement] = stmtMapper(mapOverStmt(stmt))
   def applyToExpr(expr: JavaExpressionOrQuery): JavaExpressionOrQuery = exprMapper(mapOverExpr(expr))
 
@@ -38,4 +43,12 @@ class AstModifier(stmtMapper: JavaStatement => List[JavaStatement], exprMapper: 
   }
 
   def mapOverClass(javaClass: JavaClass): JavaClass = javaClass.modifyWithAstModifier(this)
+}
+
+case class VariableReplacer(map: Map[String, JavaExpressionOrQuery]) extends AstModifier {
+  def stmtMapper(stmt: JavaStatement) = List(stmt)
+  def exprMapper(expr: JavaExpressionOrQuery) = expr match {
+    case JavaVariable(name) => map.getOrElse(name, JavaVariable(name))
+    case _ => expr
+  }
 }

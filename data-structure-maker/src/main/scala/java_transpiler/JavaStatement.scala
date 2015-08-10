@@ -10,14 +10,15 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 sealed abstract class JavaStatement {
-  def descendantStatements: List[JavaStatement] = this match {
-    case _: VariableDeclarationStatement => List(this)
-    case _: ReturnStatement => List(this)
-    case _: ExpressionStatement => List(this)
+  def childStatements: List[JavaStatement] = this match {
+    case _: VariableDeclarationStatement => Nil
+    case _: ReturnStatement => Nil
+    case _: ExpressionStatement => Nil
     case IfStatement(cond, trueCase, falseCase) => trueCase ++ falseCase
     case WhileStatement(cond, action) => action
   }
-  def directDescendantExpressions: List[JavaExpressionOrQuery] = this match {
+
+  def childExpressions: List[JavaExpressionOrQuery] = this match {
     case s: VariableDeclarationStatement => s.initialValue.toList
     case s: ReturnStatement => List(s.value)
     case s: ExpressionStatement => List(s.value)
@@ -25,7 +26,13 @@ sealed abstract class JavaStatement {
     case s: WhileStatement => List(s.cond)
   }
 
-  def descendantExpressions: List[JavaExpressionOrQuery] = descendantStatements.flatMap(_.directDescendantExpressions)
+  def descendantExpressions: List[JavaExpressionOrQuery] = {
+    this.childExpressions.flatMap(_.descendantExpressions()) ++ descendantStatements.flatMap(_.childExpressions)
+  }
+
+  def descendantStatements: List[JavaStatement] = {
+    List(this) ++ childStatements.flatMap(_.descendantStatements)
+  }
 
   def modify(astModifier: AstModifier): List[JavaStatement] = astModifier.applyToStmt(this)
 

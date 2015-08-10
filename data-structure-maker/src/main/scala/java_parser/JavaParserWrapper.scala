@@ -65,7 +65,7 @@ object ParserOfApi {
         |    MagicMultiset<Item> stuff = new MagicMultiset<Item>();
         |
         |    int getCheapestByPriority1() {
-        |        return stuff.limitBy(x -> x.priority1, 1).filter(x -> x.id > 2).head();
+        |        return stuff.limitBy(x -> x.priority1, 1).head();
         |    }
         |
         |    int getCheapestByPriority2() {
@@ -85,10 +85,11 @@ object ParserOfApi {
       """.stripMargin)
 
     val querified = priorityQueue.querify()
-    println(querified)
 
-    println(RubyOutputter.outputClass(priorityQueue))
-    println(RubyOutputter.outputClass(querified))
+    println(querified.methods.head.descendantExpressions.mkString("\n___\n"))
+
+    println(querified.queries())
+    println(priorityQueue.queries())
   }
 
 }

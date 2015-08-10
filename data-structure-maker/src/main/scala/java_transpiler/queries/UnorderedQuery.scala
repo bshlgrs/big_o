@@ -10,11 +10,8 @@ case class UnorderedQuery(
             whereClauses: List[WhereClause],
             limiter: Option[LimitByClause],
             reduction: Option[Reduction]) {
-  def toReasonableString(): String = toString // {
-//    s"UnorderedQuery(${RubyOutputter.outputExpression(source)}, where(${whereClauses.mkString(",")}), "  +
-//      limiter.map(_.toReasonableString).getOrElse("nil") ++ ", " ++
-//      reduction.map(_.toReasonableString).getOrElse("star") ++ ")"
-//  }
+
+  lazy val targetIsMagic: Boolean = source.isInstanceOf[JavaVariable]
 
   val parameters = whereClauses.flatMap(_.freeVariables)++ limiter.map(_.freeVariables) ++ reduction.map(_.freeVariables)
 

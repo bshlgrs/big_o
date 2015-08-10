@@ -51,7 +51,7 @@ abstract class WhereClauseNiceness
 class ConstantWhereClause extends WhereClauseNiceness
 
 object ConstantWhereClause {
-  def build(whereClause: WhereClause): Option[WhereClauseNiceness] = {
+  def build(whereClause: WhereClause): Option[ConstantWhereClause] = {
     if (whereClause.freeVariables.subsetOf(Set(whereClause.nodeVariableName)))
       Some(new ConstantWhereClause)
     else
@@ -60,7 +60,7 @@ object ConstantWhereClause {
 }
 
 case object SeparableWhereClause {
-  def build(whereClause: WhereClause): Option[WhereClauseNiceness] = {
+  def build(whereClause: WhereClause): Option[SeparableWhereClause] = {
     if (whereClause.lhs.freeVariables == Set())
       Some(SeparableWhereClause(whereClause.lhs, whereClause.rhs))
     else if (whereClause.rhs.freeVariables == Set())

@@ -1,7 +1,7 @@
 package java_transpiler
 
 import java_parser.JavaParserWrapper
-import java_transpiler.queries.JavaContext
+import java_transpiler.queries.{UnorderedQuery, JavaContext}
 
 import com.github.javaparser.ast.body._
 import scala.collection.JavaConverters._
@@ -11,10 +11,12 @@ case class JavaClass(name: String,
                      fields: List[JavaFieldDeclaration],
                      methods: List[JavaMethodDeclaration],
                      innerClasses: List[JavaClass]) {
-  def querify() = {
+  def querify(): JavaClass = {
     val context = JavaContext(unorderedTables())
     this.copy(methods = methods.map(_.querify(context)))
   }
+
+  def queries(): List[UnorderedQuery] = methods.flatMap(_.queries())
 
   def unorderedTables(): Map[String, JavaClass] = {
     magicMultisets().map((x) => x._1 -> getInnerClass(x._2).get)
